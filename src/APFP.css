@@ -1,13 +1,19 @@
 /*Chat messages base style*/
 
-#app-mount .avatar-1BDn8e + h2 {
+#app-mount .avatar-1BDn8e + h2,
+#app-mount .repliedMessage-VokQwo .username-1A8OIy {
     overflow: visible;
 }
 .avatar-1BDn8e,
-.userPopout-xaxa6l .avatar-37jOim svg foreignObject img,
-.root-3QyAh1 .avatar-AvHqJA svg foreignObject img {
+.avatar-37jOim svg foreignObject img,
+.avatar-AvHqJA svg foreignObject img,
+.avatar-3uk_u9 svg foreignObject img,
+.repliedMessage-VokQwo .replyAvatar-1K9Wmr {
     opacity: var(--user-avatar-opacity);
 }
+
+/*Chat base style*/
+
 .contents-2mQqc9 h2::before {
     content: '';
     position: absolute;
@@ -21,8 +27,21 @@
     background-repeat: no-repeat;
     background-position: center;
 }
-.cozyMessage-3V1Y8y:hover .avatar-1BDn8e + h2::before {
+.cozyMessage-3V1Y8y:hover h2::before {
     background-image: var(--user-avatar-playing);
+}
+.repliedMessage-VokQwo .username-1A8OIy::before { /*Replied to base style*/
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: -20px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-image: var(--user-avatar-static);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 /* User Card and Profile base style*/
@@ -32,4 +51,14 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
+}
+
+/*Member list & DM base style*/
+
+.layout-2DM8Md .avatarStack-2Dr8S9 {
+    background-image: var(--user-avatar-static);
+}
+.layout-2DM8Md:hover .avatarStack-2Dr8S9,
+.selected-aXhQR6 .avatarStack-2Dr8S9 {
+    background-image: var(--user-avatar-playing);
 }
