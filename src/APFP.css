@@ -3,10 +3,10 @@
 #app-mount .avatar-1BDn8e + h2 {
     overflow: visible;
 }
-.avatar-1BDn8e[data-user-id="237627458143125506"],
-.userPopout-xaxa6l[data-user-id="237627458143125506"] .avatar-37jOim svg foreignObject img,
-.root-3QyAh1[data-user-id="237627458143125506"] .avatar-AvHqJA svg foreignObject img {
-    opacity: 0;
+.avatar-1BDn8e,
+.userPopout-xaxa6l .avatar-37jOim svg foreignObject img,
+.root-3QyAh1 .avatar-AvHqJA svg foreignObject img {
+    opacity: var(--user-avatar-opacity);
 }
 .contents-2mQqc9 h2::before {
     content: '';
@@ -32,11 +32,4 @@
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-}
-
-/*User avatar links*/
-
-[data-user-id="237627458143125506"] {
-    --user-avatar-static: url('https://us.123rf.com/450wm/davidoff205020/davidoff2050201909/davidoff205020190900535/130357860-abstract-animation-of-beautiful-colorful-disco-ball-spinning-seamless-on-black-background-animation-.jpg');
-    --user-avatar-playing: url('https://upload.wikimedia.org/wikipedia/commons/a/a2/Animated-GIFs-davidope-11.gif');
 }
