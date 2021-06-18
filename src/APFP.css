@@ -57,8 +57,10 @@
 
 .layout-2DM8Md .avatarStack-2Dr8S9 {
     background-image: var(--user-avatar-static);
+    border-radius: 50%;
 }
 .layout-2DM8Md:hover .avatarStack-2Dr8S9,
 .selected-aXhQR6 .avatarStack-2Dr8S9 {
     background-image: var(--user-avatar-playing);
+    border-radius: 50%;
 }
