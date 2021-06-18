@@ -48,6 +48,7 @@
 
 .avatarStack-2Dr8S9 {
     background-image: var(--user-avatar-playing);
+    border-radius: 50%;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
