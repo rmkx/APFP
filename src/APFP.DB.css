@@ -5,3 +5,12 @@
     --user-avatar-playing: url('https://upload.wikimedia.org/wikipedia/commons/a/a2/Animated-GIFs-davidope-11.gif');
     --user-avatar-opacity: 0;
 }
+
+
+[data-user-id="258731845267619840"],
+.replyAvatar-1K9Wmr[src*="258731845267619840"],
+.replyAvatar-1K9Wmr[src*="258731845267619840"] + .username-1A8OIy::before {
+    --user-avatar-static: url('https://i.imgur.com/GkfoayI.png');
+    --user-avatar-playing: url('https://i.imgur.com/syREFzj.gif');
+    --user-avatar-opacity: 0;
+{
