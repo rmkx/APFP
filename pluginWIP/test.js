@@ -12,57 +12,57 @@ module.exports = class SpotifyBackground {
     load() { }
 
     start() {
-        dmAvatarPatch();
-        homePageAvatarPatch();
+        dmListPatch();
+        memberListPatch();
+        friendsListPatch();
     }
     stop() {
-        BdApi.Patcher.unpatchAll("DMAvatarPatch");
-        BdApi.Patcher.unpatchAll("HomePageAvatarPatch");
+        BdApi.Patcher.unpatchAll("DMListPatch");
+        BdApi.Patcher.unpatchAll("MemberListAvatarPatch");
+        BdApi.Patcher.unpatchAll("FriendsListAvatarPatch");
     }
 
     observer(changes) { }
 }
-
-const DMAvatar = BdApi.findModuleByDisplayName("Clickable");
-const dmAvatarPatch = () => BdApi.Patcher.after("DMAvatarPatch", DMAvatar.prototype, "render", (that, args, value) => {
+function apfpDiv(userId) {
+    let newDiv = document.createElement("div");
+    newDiv.className = "APFP";
+    newDiv.style = "position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; pointer-events: none;"
+    newDiv.dataset.apfpId = userId;
+    return newDiv
+}
+const DMListAvatar = BdApi.findModuleByDisplayName("PrivateChannel");
+const dmListPatch = () => BdApi.Patcher.after("DMListPatch", DMListAvatar.prototype, "componentDidMount", (that, args, value) => {
+    const instance = that;
     try {
-        const userId = value._owner.stateNode._reactInternalFiber.return.return.return.return.return.return.return.stateNode.__reactInternalInstance$.return.return.return.return.return.return.memoizedProps.channel.recipients[0];
-        let newDiv = {
-            className: "APFP",
-            style: {
-                position: "absolute",
-                height: "48px",
-                width: "48px",
-                pointerEvents: "none",
-                borderRadius: "50%"
-            },
-            'apfp-user-id': userId
-        }
-        value.props.children.props.children.push(BdApi.React.createElement("div", newDiv));
+        const avatarStackPath = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
+        const avatarStackNode = avatarStackPath.length > 3 ? avatarStackPath[1].childNodes[0] : avatarStackPath[0].childNodes[0];
+        console.log("test: ", avatarStackNode);
+        let APFP = apfpDiv(instance.props.user.id);
+        avatarStackNode.append(APFP);
     }
-    catch (error) { }
+    catch (error) { console.log(error) }
     return value;
 });
-const HomePageAvatar = BdApi.findModuleByProps("AnimatedAvatar", "Sizes");
-const homePageAvatarPatch = () => BdApi.Patcher.after("HomePageAvatarPatch", HomePageAvatar, "default", (that, args, value) => {
-    try{
-        const newChildren = new Array();
-        let userId = value.props.children.props.children[0].props.children.props.src.substring(35, value.props.children.props.children[0].props.children.props.src.lastIndexOf("/"));
-        newChildren[0] = value.props.children.props.children[0].props.children;
-        value.props.children.props.children[0].props.children = newChildren;
-        let newDiv = {
-            className: "APFP",
-            style: {
-                position: "absolute",
-                top: 0,
-                width: "100%",
-                height: "100%",
-                pointerEvents: "none",
-                borderRadius: "50%"
-            },
-            'apfp-user-id': userId
-        }
-        value.props.children.props.children[0].props.children.push(BdApi.React.createElement("div", newDiv));
+const MemberListAvatar = BdApi.findModuleByDisplayName("MemberListItem");
+const memberListPatch = () => BdApi.Patcher.after("MemberListAvatarPatch", MemberListAvatar.prototype, "componentDidMount", (that, args, value) => {
+    const instance = that;
+    try {
+        const avatarStackNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.child.child.stateNode;
+        let APFP = apfpDiv(instance.props.user.id);
+        avatarStackNode.append(APFP);
     }
-    catch(error) { }
+    catch (error) { console.log(error) }
+    return value;
+});
+const FriendsListAvatar = BdApi.findModuleByDisplayName("PeopleListItem");
+const friendsListPatch = () => BdApi.Patcher.after("FriendsListAvatarPatch", FriendsListAvatar.prototype, "componentDidMount", (that, args, value) => {
+    const instance = that;
+    try {
+        const avatarStackNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.child.child.child.stateNode;
+        let APFP = apfpDiv(instance.props.user.id);
+        avatarStackNode.append(APFP);
+    }
+    catch (error) { console.log(error) }
+    return value;
 });
