@@ -8,7 +8,7 @@
 */
 
 
-module.exports = class SpotifyBackground {
+module.exports = class test {
     load() { }
 
     start() {
