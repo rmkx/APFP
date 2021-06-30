@@ -107,7 +107,6 @@ const NowPlayingAvatar = BdApi.findModuleByProps("AnimatedAvatar", "Sizes");
 const nowPlayingAvatarPatch = () => BdApi.Patcher.after("NowPlayingAvatarPatch", NowPlayingAvatar, "default", (that, args, value) => {
     const [props] = args;
     try {
-        console.log(that, props, value);
         const { [4]: userId } = props.src.split("/");
         if(value.type === "div") {
             if (value.ref !== null) { const originalRef = () => value.ref; originalRef() }
