@@ -21,29 +21,27 @@ module.exports = class test {
         nowPlayingAvatarPatch();
         patchUserSection();
         newDm();
+        voiceChannelAvatar();
+        userProfilePatch();
+        userCardPatch();
     }
     stop() {
-        BdApi.Patcher.unpatchAll("DMListPatch");
-        BdApi.Patcher.unpatchAll("DMListUpdatePatch");
-        BdApi.Patcher.unpatchAll("MemberListAvatarPatch");
-        BdApi.Patcher.unpatchAll("MemberListUpdateAvatarPatch");
-        BdApi.Patcher.unpatchAll("FriendsListAvatarPatch");
-        BdApi.Patcher.unpatchAll("FriendsListUpdateAvatarPatch");
-        BdApi.Patcher.unpatchAll("ActivityPanelPatch");
-        BdApi.Patcher.unpatchAll("NowPlayingAvatarPatch");
-        BdApi.Patcher.unpatchAll("UserInfoAvatarPatch");
-        BdApi.Patcher.unpatchAll("NewDMPatch");
+        unpatchAll();
     }
 
     observer(changes) { }
 }
-/*function apfpDiv(userId) {
-    let newDiv = document.createElement("div");
-    newDiv.className = "APFP";
-    newDiv.style = "position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 50%; pointer-events: none;"
-    newDiv.dataset.apfpId = userId;
-    return newDiv
-}*/
+const getElementByComponentName = componentName => new Promise(resolve => {
+    const getElement = () => {
+        const element = document.querySelector(componentName);
+        if (element) {
+            resolve(element);
+        } else {
+            requestAnimationFrame(getElement);
+        }
+    };
+    getElement();
+});
 const DMListAvatar = BdApi.findModuleByDisplayName("PrivateChannel");
 const dmListPatch = () => BdApi.Patcher.after("DMListPatch", DMListAvatar.prototype, "componentDidMount", (that, args, value) => {
     const instance = that;
@@ -169,4 +167,62 @@ function patchUserSection() {
     });
     userInfoAvatarPatch();
     document.querySelector(".container-3baos1").__reactInternalInstance$.return.stateNode.forceUpdate();
+}
+const VoiceChannelUsers = BdApi.findModuleByDisplayName("VoiceUser");
+const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", VoiceChannelUsers.prototype, "componentDidMount", (that, args, value) => {
+    const instance = that;
+    const [props] = args;
+    const avatarNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.stateNode;
+    avatarNode.setAttribute("apfp-user-id", instance.props.user.id);
+    return value;
+})
+async function userCardPatch() { /*Need to look into why it only triggers after opening the card once*/
+    const UserCard = await getElementByComponentName(".userPopout-xaxa6l");
+    const UserCardFunc = UserCard.__reactInternalInstance$.return;
+    const userCardAvatar = () => BdApi.Patcher.after("UserCardPatch", UserCardFunc.type, "render", (that, args, value) => {
+        try {
+        const instance = that;
+        const [props] = args;
+        console.log("Intance: ", instance, "\nProps: ", props, "\nValue: ", value);
+        const userId = props.children[1].props.user.id;
+        const avatarStackNode = value.ref.current.querySelector("foreignObject").childNodes[0];
+        avatarStackNode.setAttribute("apfp-user-id", userId);
+    }
+    catch(error) { console.log(error) }
+        return value;
+    });
+    userCardAvatar();
+}
+const UserProfile = BdApi.findModule((m) => m?.default?.displayName === "UserProfileModal");
+const userProfilePatch = () => BdApi.Patcher.after("UserProfilePatch", UserProfile, "default", (that, args, value) => {
+    const [props] = args;
+    try {
+        const userId = props.user.id;
+        const originalRef = typeof value.props.children.ref === "function" ? value.props.children.ref : null;
+        value.props.children.props.children[0].ref = (e) => {
+            if (!e) return originalRef ? originalRef(e) : e;
+            const avatarStackNode = e.querySelector("foreignObject").childNodes[0];
+            avatarStackNode.setAttribute("apfp-user-id", userId);
+            return originalRef ? originalRef(e) : e;
+        }
+        value.props.children.ref(e);
+    }
+    catch (error) { console.log(error) }
+    return value;
+});
+function unpatchAll() {
+    BdApi.Patcher.unpatchAll("DMListPatch");
+    BdApi.Patcher.unpatchAll("DMListUpdatePatch");
+    BdApi.Patcher.unpatchAll("MemberListAvatarPatch");
+    BdApi.Patcher.unpatchAll("MemberListUpdateAvatarPatch");
+    BdApi.Patcher.unpatchAll("FriendsListAvatarPatch");
+    BdApi.Patcher.unpatchAll("FriendsListUpdateAvatarPatch");
+    BdApi.Patcher.unpatchAll("ActivityPanelPatch");
+    BdApi.Patcher.unpatchAll("NowPlayingAvatarPatch");
+    BdApi.Patcher.unpatchAll("UserInfoAvatarPatch");
+    BdApi.Patcher.unpatchAll("NewDMPatch");
+    BdApi.Patcher.unpatchAll("VoiceChannelAvatarPatch");
+    BdApi.Patcher.unpatchAll("PopupLayerPatch");
+    BdApi.Patcher.unpatchAll("UserProfilePatch");
+    BdApi.Patcher.unpatchAll("UserCardPatch");
 }
