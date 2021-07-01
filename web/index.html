@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APFP</title>
+</head>
+<body>
+    <div id="myData"></div>
+</body>
+<script>
+
+function fetchData() {
+  fetch('https://apfp-js-api.p0rtl.repl.co/ReqAll')
+    .then((res) => res.json())
+    .then((data) => {
+      let output = ""
+      const datArray = Object.keys(data);
+      datArray.forEach((datArray, index) => {
+        output += "<div class='ResponseWrapper'>"
+        output += `<p class="Request">Request</p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8 10h-5l9-10 9 10h-5v10h-8v-10zm11 9v3h-14v-3h-2v5h18v-5h-2z"/></svg><p class="userId">${datArray}</p>`
+        for(var property in data[datArray]) {
+            console.log(datArray + property + data[datArray][property]);
+            output += `<img src='${data[datArray][property]}'></img>`
+        }
+        output += "</div>"
+      });
+      
+      document.getElementById('myData').innerHTML = output;
+    })
+    .catch((error) => {
+      console.log(`Error Fetching data : ${error}`)
+      document.getElementById('myData').innerHTML = 'Error Loading Data'
+    })
+}
+
+fetchData()
+
+</script>
+<style>
+
+    svg {
+        position: absolute;
+        bottom: 25px;
+        left: 10px;
+        width: 100px;
+        height: auto;
+        fill: #f29339;
+    }
+
+    body {
+        background-color: rgb(46, 46, 46);
+    }
+
+    .Request {
+        position: absolute;
+        background-color: rgb(145, 145, 145);
+        top: -40px;
+        left: 10px;
+        width: auto;
+        height: auto;
+        border-radius: 4px;
+        padding: 10px;
+        font-size: 50px;
+        text-align: center;
+    }
+
+    .userId {
+        position: absolute;
+        background-color: rgb(19, 139, 194);
+        top: 80px;
+        left: 10px;
+        width: auto;
+        height: auto;
+        border-radius: 4px;
+        padding: 5px;
+        text-align: center;
+    }
+
+    img:not(:nth-child(4)) {
+        border-radius: 50%;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        width: 175px;
+        height: 175px;
+    }
+
+    img:nth-child(4) {
+        border-radius: 50%;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 100px;
+        height: 100px;
+    }
+
+    #myData {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    .ResponseWrapper {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        background-color: white;
+        margin: 6px;
+        border-radius: 8px;
+    }
+
+</style>
+</html>
