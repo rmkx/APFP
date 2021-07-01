@@ -113,23 +113,23 @@ const nowPlayingAvatarPatch = () => BdApi.Patcher.after("NowPlayingAvatarPatch",
     try {
         const { [4]: userId } = props.src.split("/");
         if (value.type === "div") {
-            if (value.ref !== null) { const originalRef = () => value.ref; originalRef() }
+            const originalRef = typeof value.ref === "function" ? value.ref : null;
             value.ref = (e) => {
-                if (!e) return e;
+                if (!e) return originalRef ? originalRef(e) : e;
                 const avatarStackNode = e.querySelector("foreignObject").childNodes[0];
                 if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
-                return e;
+                return originalRef ? originalRef(e) : e;
             };
         }
         else if (value.type.displayName === "Clickable") {
-            if (value.props.children.ref !== null) { const originalRef = () => value.props.children.ref; originalRef() }
+            const originalRef = typeof value.props.children.ref === "function" ? value.props.children.ref : null;
             value.props.children.ref = (e) => {
-                if (!e) return e;
+                if (!e) return originalRef ? originalRef(e) : e;
                 const avatarStackNode = e.querySelector("foreignObject").childNodes[0];
                 if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
-                return e;
+                return originalRef ? originalRef(e) : e;
             };
-        }
+        };
     }
     catch (error) { console.log(error) }
     return value;
@@ -139,15 +139,15 @@ const newDm = () => BdApi.Patcher.after("NewDirectMessagePatcher", NewDirectMess
     const instance = that;
     try {
         const userId = instance.props.channel.rawRecipients[0].id;
-        if (value.ref !== null) { const originalRef = () => value.ref; originalRef() }
+        const originalRef = typeof value.ref === "function" ? value.ref : null;
         value.ref = (e) => {
-            if (!e) return e;
+            if (!e) return originalRef ? originalRef(e) : e;
             const avatarStackNode = e.querySelector("foreignObject").childNodes[0];
             if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
-            return e;
+            return originalRef ? originalRef(e) : e;
         };
     }
-    catch(error) { console.log(error) }
+    catch (error) { console.log(error) }
     return value;
 });
 function patchUserSection() {
@@ -156,15 +156,12 @@ function patchUserSection() {
         const instance = that;
         try {
             const userId = instance.props.currentUser.id;
-            if (value.ref !== null) {
-                const originalRef = () => value.ref;
-                originalRef();
-            }
+            const originalRef = typeof value.ref === "function" ? value.ref : null;
             value.ref = (e) => {
-                if (!e) return e;
+                if (!e) return originalRef ? originalRef(e) : e;
                 const avatarStackNode = e.querySelector("foreignObject").childNodes[0];
                 if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
-                return e;
+                return originalRef ? originalRef(e) : e;
             };
         }
         catch (error) { console.log(error) }
