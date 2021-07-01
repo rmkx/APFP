@@ -19,6 +19,8 @@ module.exports = class test {
         friendsListPatch();
         friendsListUpdatePatch();
         nowPlayingAvatarPatch();
+        patchUserSection();
+        newDm();
     }
     stop() {
         BdApi.Patcher.unpatchAll("DMListPatch");
@@ -29,6 +31,8 @@ module.exports = class test {
         BdApi.Patcher.unpatchAll("FriendsListUpdateAvatarPatch");
         BdApi.Patcher.unpatchAll("ActivityPanelPatch");
         BdApi.Patcher.unpatchAll("NowPlayingAvatarPatch");
+        BdApi.Patcher.unpatchAll("UserInfoAvatarPatch");
+        BdApi.Patcher.unpatchAll("NewDMPatch");
     }
 
     observer(changes) { }
@@ -108,12 +112,12 @@ const nowPlayingAvatarPatch = () => BdApi.Patcher.after("NowPlayingAvatarPatch",
     const [props] = args;
     try {
         const { [4]: userId } = props.src.split("/");
-        if(value.type === "div") {
+        if (value.type === "div") {
             if (value.ref !== null) { const originalRef = () => value.ref; originalRef() }
             value.ref = (e) => {
                 if (!e) return e;
                 const avatarStackNode = e.querySelector("foreignObject").childNodes[0];
-                if(!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
+                if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
                 return e;
             };
         }
@@ -122,11 +126,50 @@ const nowPlayingAvatarPatch = () => BdApi.Patcher.after("NowPlayingAvatarPatch",
             value.props.children.ref = (e) => {
                 if (!e) return e;
                 const avatarStackNode = e.querySelector("foreignObject").childNodes[0];
-                if(!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
+                if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
                 return e;
             };
         }
     }
+    catch (error) { console.log(error) }
+    return value;
+});
+const NewDirectMessage = BdApi.findModuleByDisplayName("DirectMessage");
+const newDm = () => BdApi.Patcher.after("NewDirectMessagePatcher", NewDirectMessage.prototype, "render", (that, args, value) => {
+    const instance = that;
+    try {
+        const userId = instance.props.channel.rawRecipients[0].id;
+        if (value.ref !== null) { const originalRef = () => value.ref; originalRef() }
+        value.ref = (e) => {
+            if (!e) return e;
+            const avatarStackNode = e.querySelector("foreignObject").childNodes[0];
+            if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
+            return e;
+        };
+    }
     catch(error) { console.log(error) }
     return value;
 });
+function patchUserSection() {
+    const UserInfoAvatar = document.querySelector(".container-3baos1").__reactInternalInstance$.return.type;
+    const userInfoAvatarPatch = () => BdApi.Patcher.after("UserInfoAvatarPatch", UserInfoAvatar.prototype, "render", (that, args, value) => {
+        const instance = that;
+        try {
+            const userId = instance.props.currentUser.id;
+            if (value.ref !== null) {
+                const originalRef = () => value.ref;
+                originalRef();
+            }
+            value.ref = (e) => {
+                if (!e) return e;
+                const avatarStackNode = e.querySelector("foreignObject").childNodes[0];
+                if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
+                return e;
+            };
+        }
+        catch (error) { console.log(error) }
+        return value;
+    });
+    userInfoAvatarPatch();
+    document.querySelector(".container-3baos1").__reactInternalInstance$.return.stateNode.forceUpdate();
+}
