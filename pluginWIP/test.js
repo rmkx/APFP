@@ -176,19 +176,17 @@ const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", 
     avatarNode.setAttribute("apfp-user-id", instance.props.user.id);
     return value;
 })
-async function userCardPatch() { /*Need to look into why it only triggers after opening the card once*/
-    const UserCard = await getElementByComponentName(".userPopout-xaxa6l");
-    const UserCardFunc = UserCard.__reactInternalInstance$.return;
-    const userCardAvatar = () => BdApi.Patcher.after("UserCardPatch", UserCardFunc.type, "render", (that, args, value) => {
+async function userCardPatch() {
+    const UserCard = await getElementByComponentName(".layer-v9HyYc");
+    const UserCardFunc = UserCard.__reactInternalInstance$.return.type;
+    const userCardAvatar = () => BdApi.Patcher.after("UserCardPatch", UserCardFunc.prototype, "componentDidMount", (that, args, value) => {
         try {
-        const instance = that;
-        const [props] = args;
-        console.log("Intance: ", instance, "\nProps: ", props, "\nValue: ", value);
-        const userId = props.children[1].props.user.id;
-        const avatarStackNode = value.ref.current.querySelector("foreignObject").childNodes[0];
-        avatarStackNode.setAttribute("apfp-user-id", userId);
-    }
-    catch(error) { console.log(error) }
+            const instance = that;
+            const avatarStackNode = instance.elementRef.current.querySelector("foreignObject").childNodes[0];
+            const { [4]: userId } = avatarStackNode.childNodes[0].src.split("/");
+            avatarStackNode.setAttribute("apfp-user-id", userId);
+        }
+        catch (error) { console.log(error) }
         return value;
     });
     userCardAvatar();
