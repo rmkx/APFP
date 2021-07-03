@@ -1,69 +1,32 @@
-/*Chat messages base style*/
-
-#app-mount .avatar-1BDn8e + h2,
-#app-mount .repliedMessage-VokQwo .username-1A8OIy {
-    overflow: visible;
-}
-.avatar-1BDn8e,
-.avatar-37jOim svg foreignObject img,
-.avatar-AvHqJA svg foreignObject img,
-.avatar-3uk_u9 svg foreignObject img,
-.repliedMessage-VokQwo .replyAvatar-1K9Wmr {
+.avatarStack-2Dr8S9 img {
     opacity: var(--user-avatar-opacity);
 }
-
-/*Chat base style*/
-
-.contents-2mQqc9 h2::before {
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: -56px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+.APFP {
     background-image: var(--user-avatar-static);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
 }
-.cozyMessage-3V1Y8y:hover h2::before {
+.cozyMessage-3V1Y8y:hover .APFP,
+.layout-2DM8Md:hover .avatarStack-2Dr8S9,
+.selected-aXhQR6 .avatarStack-2Dr8S9 {
     background-image: var(--user-avatar-playing);
 }
-.repliedMessage-VokQwo .username-1A8OIy::before { /*Replied to base style*/
-    content: '';
-    position: absolute;
-    top: 2px;
-    left: -20px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background-image: var(--user-avatar-static);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* User Card and Profile base style*/
-
 .avatarStack-2Dr8S9 {
     background-image: var(--user-avatar-playing);
     border-radius: 50%;
-    background-size: contain;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
 }
-
-/*Member list & DM base style*/
-
 .layout-2DM8Md .avatarStack-2Dr8S9 {
     background-image: var(--user-avatar-static);
     background-size: cover;
     border-radius: 50%;
 }
-.layout-2DM8Md:hover .avatarStack-2Dr8S9,
-.selected-aXhQR6 .avatarStack-2Dr8S9 {
-    background-image: var(--user-avatar-playing);
-    background-size: cover;
-    border-radius: 50%;
+.avatarSmall-1PJoGO {
+    background-image: var(--user-avatar-static)!important;
+}
+.content-1Wq3SX:hover .avatarSmall-1PJoGO {
+    background-image: var(--user-avatar-playing)!important;
 }
