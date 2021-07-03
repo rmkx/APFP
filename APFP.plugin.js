@@ -1,8 +1,8 @@
 /**
-* @name         testasdf
-* @description  test
-* @source       asdf
-* @author       rmkx
+* @name         AnimatedProfilePicture
+* @description  Adds nitro-like animated profile pictures
+* @source       https://github.com/rmkx/APFP
+* @author       rmkx, p0rtL
 * @invite       HnGWVQbQBv
 * @version      1.0beta
 */
