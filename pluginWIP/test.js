@@ -4,7 +4,7 @@
 * @source       asdf
 * @author       rmkx
 * @invite       HnGWVQbQBv
-* @version      0.6
+* @version      0.5
 */
 
 
@@ -175,7 +175,7 @@ const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", 
     try {
         const instance = that;
         const avatarNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.stateNode;
-        avatarNode.setAttribute("apfp-user-id", instance.props.user.id);
+        if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
     }
     catch (error) { console.log(error); return value; }
     return value;
@@ -191,7 +191,7 @@ async function userCardPatch() {
                 if (currentRef.id !== null && currentRef.id !== "") {
                     const avatarStackNode = currentRef.querySelector("foreignObject").childNodes[0];
                     const userId = currentRef.__reactInternalInstance$.stateNode.childNodes[0].childNodes[0].childNodes[0].__reactInternalInstance$.memoizedProps.children.props.user.id;
-                    avatarStackNode.setAttribute("apfp-user-id", userId);
+                    if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
                 }
                 else if (currentRef.querySelector(".avatarContainer-3CQrif")) {
                     const lastAvatar = currentRef.querySelectorAll(".avatarContainer-3CQrif");
@@ -244,20 +244,21 @@ const userProfilePatch = () => BdApi.Patcher.after("UserProfilePatch", UserProfi
 });
 const ChatMessages = BdApi.findModule(m => m.default && m.default.toString().search("childrenRepliedMessage") > -1);
 const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessages, "default", (that, args, value) => {
-    const instance = that;
     const [props] = args;
     if (value.props.children.props.className.includes("groupStart") && !value.props.children.props.className.includes("systemMessage")) {
         const originalRef = typeof value.props.children.ref === "function" ? value.props.children.ref : null;
         value.props.children.ref = (e) => {
             if (!e) return originalRef ? originalRef(e) : e;
-            const avatarParentNode = e.querySelector(".contents-2mQqc9");
-            const userID = props.childrenHeader.props.message.author.id;
-            if (!avatarParentNode.querySelector(".APFP")) {
-                let APFPDiv = document.createElement("div");
-                APFPDiv.className = "APFP";
-                APFPDiv.style = "position: absolute; left: 16px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1";
-                APFPDiv.setAttribute("apfp-user-id", userID);
-                avatarParentNode.insertBefore(APFPDiv, avatarParentNode.childNodes[1]);
+            if (!e.querySelector(".APFP")) {
+                const avatarParentNode = e.querySelector(".contents-2mQqc9");
+                const userID = props.childrenHeader.props.message.author.id;
+                if (!avatarParentNode.querySelector(".APFP")) {
+                    let APFPDiv = document.createElement("div");
+                    APFPDiv.className = "APFP";
+                    APFPDiv.style = "position: absolute; left: 16px; top: 2px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1";
+                    APFPDiv.setAttribute("apfp-user-id", userID);
+                    avatarParentNode.append(APFPDiv, avatarParentNode.childNodes[2]);
+                }
             }
             return originalRef ? originalRef(e) : e;
         };
