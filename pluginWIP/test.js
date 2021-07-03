@@ -172,10 +172,10 @@ async function patchUserSection() {
 }
 const VoiceChannelUsers = BdApi.findModuleByDisplayName("VoiceUser");
 const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", VoiceChannelUsers.prototype, "componentDidMount", (that, args, value) => {
+    const instance = that;
     try {
-        const instance = that;
-        const avatarNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.stateNode;
-        if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
+        const avatarStackNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.stateNode;
+        if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id); }
     }
     catch (error) { console.log(error); return value; }
     return value;
@@ -197,11 +197,8 @@ async function userCardPatch() {
                     const lastAvatar = currentRef.querySelectorAll(".avatarContainer-3CQrif");
                     for (let i = 0; i < lastAvatar.length; i++) {
                         const lastAvatarID = lastAvatar[0].__reactInternalInstance$.key;
-                        let APFPDiv = document.createElement("div");
-                        APFPDiv.className = "APFP";
-                        APFPDiv.style = "position: absolute; top: 0; left: 0; width: 100%; height: 100%";
-                        APFPDiv.setAttribute("apfp-user-id", lastAvatarID);
-                        lastAvatar[i].appendChild(APFPDiv);
+                        lastAvatar[i].style = "border-radius: 50%"
+                        lastAvatar[i].setAttribute("apfp-user-id", lastAvatarID);
                     }
                     if (currentRef.querySelector("foreignObject")) {
                         const maskedAvatars = currentRef.querySelectorAll("foreignObject");
@@ -209,9 +206,9 @@ async function userCardPatch() {
                             const avatarUserID = maskedAvatars[0].__reactInternalInstance$.child.key;
                             let APFPDiv = document.createElement("div");
                             APFPDiv.className = "APFP";
-                            APFPDiv.style = "position: absolute; top: 0; left: 0; width: 100%; height: 100%";
+                            APFPDiv.style = "position: fixed; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
                             APFPDiv.setAttribute("apfp-user-id", avatarUserID);
-                            maskedAvatars[i].appendChild(APFPDiv);
+                            maskedAvatars[i].insertBefore(APFPDiv, maskedAvatars[i].childNodes[0]);
                         }
                     }
                     else { return value; }
