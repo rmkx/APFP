@@ -256,6 +256,15 @@ const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessage
         value.props.children.ref = (e) => {
             if (!e) return originalRef ? originalRef(e) : e;
             if (!e.querySelector(".APFP")) {
+                if(props.hasReply) {
+                    const replyNode = e.querySelector(".repliedMessage-VokQwo");
+                    const replyUserID = props.childrenHeader.props.repliedMessage.message.author.id;
+                    let APFPDiv = document.createElement("div");
+                    APFPDiv.className = "APFP";
+                    APFPDiv.style = "position: absolute; left: 0px; width: 16px; height: 16px; border-radius: 50%; pointer-events: none; z-index: 1; user-select: none;";
+                    APFPDiv.setAttribute("apfp-user-id", replyUserID);
+                    replyNode.append(APFPDiv);
+                }
                 const avatarParentNode = e.querySelector(".contents-2mQqc9");
                 const userID = props.childrenHeader.props.message.author.id;
                 let APFPDiv = document.createElement("div");
