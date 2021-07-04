@@ -201,7 +201,7 @@ async function userCardPatch() {
                 else if (currentRef.querySelector(".avatarContainer-3CQrif")) {
                     const lastAvatar = currentRef.querySelectorAll(".avatarContainer-3CQrif");
                     for (let i = 0; i < lastAvatar.length; i++) {
-                        const lastAvatarID = lastAvatar[0].__reactInternalInstance$.key;
+                        const lastAvatarID = lastAvatar[i].__reactInternalInstance$.key;
                         let APFPDiv = document.createElement("div");
                         APFPDiv.className = "APFP";
                         APFPDiv.style = "position: fixed; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
@@ -212,7 +212,7 @@ async function userCardPatch() {
                     if (currentRef.querySelector("foreignObject")) {
                         const maskedAvatars = currentRef.querySelectorAll("foreignObject");
                         for (let i = 0; i < maskedAvatars.length; i++) {
-                            const avatarUserID = maskedAvatars[0].__reactInternalInstance$.child.key;
+                            const avatarUserID = maskedAvatars[i].__reactInternalInstance$.child.key;
                             let APFPDiv = document.createElement("div");
                             APFPDiv.className = "APFP";
                             APFPDiv.style = "position: fixed; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
