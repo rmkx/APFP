@@ -251,12 +251,12 @@ const userProfilePatch = () => BdApi.Patcher.after("UserProfilePatch", UserProfi
 const ChatMessages = BdApi.findModule(m => m.default && m.default.toString().search("childrenRepliedMessage") > -1);
 const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessages, "default", (that, args, value) => {
     const [props] = args;
-    if (value.props.children.props.className.includes("groupStart") && !value.props.children.props.className.includes("systemMessage")) {
+    if (value.props.children.props.className.includes("groupStart") && !props.isSystemMessage) {
         const originalRef = typeof value.props.children.ref === "function" ? value.props.children.ref : null;
         value.props.children.ref = (e) => {
             if (!e) return originalRef ? originalRef(e) : e;
             if (!e.querySelector(".APFP")) {
-                if(props.hasReply) {
+                if(props.hasReply && props.childrenHeader.props.repliedMessage.message) {
                     const replyNode = e.querySelector(".repliedMessage-VokQwo");
                     const replyUserID = props.childrenHeader.props.repliedMessage.message.author.id;
                     let APFPDiv = document.createElement("div");
