@@ -187,7 +187,7 @@ const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", 
         const avatarStackNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.stateNode;
         let APFPDiv = document.createElement("div");
         APFPDiv.className = "APFP";
-        APFPDiv.style = "position: fixed; top: inherit; left: inherit; width: 24px; height: 24px; border-radius: 50%; margin-left: 8px;";
+        APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: 24px; height: 24px; border-radius: 50%; margin-left: 8px;";
         APFPDiv.setAttribute("apfp-user-id", instance.props.user.id);
         avatarStackNode.insertBefore(APFPDiv, avatarStackNode.childNodes[1]);
     }
@@ -213,7 +213,7 @@ async function userCardPatch() {
                         const lastAvatarID = lastAvatar[i].__reactInternalInstance$.key;
                         let APFPDiv = document.createElement("div");
                         APFPDiv.className = "APFP";
-                        APFPDiv.style = "position: fixed; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
+                        APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
                         APFPDiv.setAttribute("apfp-user-id", lastAvatarID);
                         lastAvatar[i].insertBefore(APFPDiv, lastAvatar[i].childNodes[0]);
                         lastAvatar[i].setAttribute("apfp-user-id", lastAvatarID);
@@ -224,7 +224,7 @@ async function userCardPatch() {
                             const avatarUserID = maskedAvatars[i].__reactInternalInstance$.child.key;
                             let APFPDiv = document.createElement("div");
                             APFPDiv.className = "APFP";
-                            APFPDiv.style = "position: fixed; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
+                            APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
                             APFPDiv.setAttribute("apfp-user-id", avatarUserID);
                             maskedAvatars[i].insertBefore(APFPDiv, maskedAvatars[i].childNodes[0]);
                         }
