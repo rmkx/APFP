@@ -9,7 +9,8 @@
 }
 .cozyMessage-3V1Y8y:hover .APFP,
 .layout-2DM8Md:hover .avatarStack-2Dr8S9,
-.selected-aXhQR6 .avatarStack-2Dr8S9 {
+.selected-aXhQR6 .avatarStack-2Dr8S9,
+.content-1Wq3SX:hover .APFP {
     background-image: var(--user-avatar-playing);
 }
 .avatarStack-2Dr8S9 {
@@ -23,10 +24,4 @@
     background-image: var(--user-avatar-static);
     background-size: cover;
     border-radius: 50%;
-}
-.avatarSmall-1PJoGO {
-    background-image: var(--user-avatar-static)!important;
-}
-.content-1Wq3SX:hover .avatarSmall-1PJoGO {
-    background-image: var(--user-avatar-playing)!important;
 }

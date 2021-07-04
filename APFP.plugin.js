@@ -24,11 +24,11 @@ module.exports = class test {
         userProfilePatch();
         userCardPatch();
         chatAvatarPatch();
-        if(!document.querySelector("bd-styles #APFP")) { BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`); }
+        if (!document.querySelector("bd-styles #APFP")) { BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`); }
     }
     stop() {
         unpatchAll();
-        if(document.querySelector("bd-styles #APFP")) { BdApi.clearCSS("APFP"); }
+        if (document.querySelector("bd-styles #APFP")) { BdApi.clearCSS("APFP"); }
     }
 
     observer(changes) { }
@@ -175,8 +175,12 @@ const VoiceChannelUsers = BdApi.findModuleByDisplayName("VoiceUser");
 const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", VoiceChannelUsers.prototype, "componentDidMount", (that, args, value) => {
     const instance = that;
     try {
-        const avatarStackNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.stateNode;
-        if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id); }
+        const avatarStackNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.stateNode;
+        let APFPDiv = document.createElement("div");
+        APFPDiv.className = "APFP";
+        APFPDiv.style = "position: fixed; top: inherit; left: inherit; width: 24px; height: 24px; border-radius: 50%; margin-left: 8px;";
+        APFPDiv.setAttribute("apfp-user-id", instance.props.user.id);
+        avatarStackNode.insertBefore(APFPDiv, avatarStackNode.childNodes[1]);
     }
     catch (error) { console.log(error); return value; }
     return value;
@@ -248,27 +252,26 @@ const ChatMessages = BdApi.findModule(m => m.default && m.default.toString().sea
 const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessages, "default", (that, args, value) => {
     const [props] = args;
     if (value.props.children.props.className.includes("groupStart") && !value.props.children.props.className.includes("systemMessage")) {
-            const originalRef = typeof value.props.children.ref === "function" ? value.props.children.ref : null;
-            value.props.children.ref = (e) => {
-                if (!e) return originalRef ? originalRef(e) : e;
-                if (!e.querySelector(".APFP")) {
-                    const avatarParentNode = e.querySelector(".contents-2mQqc9");
-                    const userID = props.childrenHeader.props.message.author.id;
-                    if (!avatarParentNode.querySelector(".APFP")) {
-                        let APFPDiv = document.createElement("div");
-                        APFPDiv.className = "APFP";
-                        if(value.props.children.props.className.includes("hasReply")) {
-                            APFPDiv.style = "position: absolute; top: 27px; left: 16px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
-                        }
-                        else { 
-                            APFPDiv.style = "position: absolute; top: 2px; left: 16px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
-                        }
-                        APFPDiv.setAttribute("apfp-user-id", userID);
-                        avatarParentNode.append(APFPDiv, avatarParentNode.childNodes[2]);
-                    }
+        const originalRef = typeof value.props.children.ref === "function" ? value.props.children.ref : null;
+        value.props.children.ref = (e) => {
+            if (!e) return originalRef ? originalRef(e) : e;
+            if (!e.querySelector(".APFP")) {
+                const avatarParentNode = e.querySelector(".contents-2mQqc9");
+                const userID = props.childrenHeader.props.message.author.id;
+                let APFPDiv = document.createElement("div");
+                APFPDiv.className = "APFP";
+                if (value.props.children.props.className.includes("hasReply")) {
+                    APFPDiv.style = "position: absolute; top: 27px; left: 16px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
                 }
-                return originalRef ? originalRef(e) : e;
-            };
+                else {
+                    APFPDiv.style = "position: absolute; top: 2px; left: 16px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
+                }
+                APFPDiv.setAttribute("apfp-user-id", userID);
+                avatarParentNode.append(APFPDiv, avatarParentNode.childNodes[2]);
+
+            }
+            return originalRef ? originalRef(e) : e;
+        };
     }
     return value;
 });
