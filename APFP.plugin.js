@@ -24,15 +24,24 @@ module.exports = class test {
         userProfilePatch();
         userCardPatch();
         chatAvatarPatch();
+        cssInterval = setInterval(function () {
+            if (document.querySelector("bd-styles #APFP")) {
+                BdApi.clearCSS("APFP");
+                BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`);
+            }
+            else { BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`); }
+        }, 2700000);
         if (!document.querySelector("bd-styles #APFP")) { BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`); }
     }
     stop() {
         unpatchAll();
+        clearInterval(cssInterval);
         if (document.querySelector("bd-styles #APFP")) { BdApi.clearCSS("APFP"); }
     }
 
     observer(changes) { }
 }
+let cssInterval;
 const getElementByComponentName = componentName => new Promise(resolve => {
     const getElement = () => {
         const element = document.querySelector(componentName);
@@ -256,7 +265,7 @@ const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessage
         value.props.children.ref = (e) => {
             if (!e) return originalRef ? originalRef(e) : e;
             if (!e.querySelector(".APFP")) {
-                if(props.hasReply && props.childrenHeader.props.repliedMessage.message) {
+                if (props.hasReply && props.childrenHeader.props.repliedMessage.message) {
                     const replyNode = e.querySelector(".repliedMessage-VokQwo");
                     const replyUserID = props.childrenHeader.props.repliedMessage.message.author.id;
                     let APFPDiv = document.createElement("div");
