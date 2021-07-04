@@ -260,15 +260,9 @@ const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessage
                 const userID = props.childrenHeader.props.message.author.id;
                 let APFPDiv = document.createElement("div");
                 APFPDiv.className = "APFP";
-                if (value.props.children.props.className.includes("hasReply")) {
-                    APFPDiv.style = "position: absolute; top: 27px; left: 16px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
-                }
-                else {
-                    APFPDiv.style = "position: absolute; top: 2px; left: 16px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
-                }
+                APFPDiv.style = "position: absolute; top: 0px; left: -56px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
                 APFPDiv.setAttribute("apfp-user-id", userID);
-                avatarParentNode.append(APFPDiv, avatarParentNode.childNodes[2]);
-
+                avatarParentNode.childNodes[1].insertBefore(APFPDiv, avatarParentNode.childNodes[1].childNodes[0]);
             }
             return originalRef ? originalRef(e) : e;
         };
