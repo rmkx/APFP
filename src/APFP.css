@@ -1,5 +1,5 @@
 .avatarStack-2Dr8S9 img,
-.wrapper-1BJsBx img {
+.wrapper-1BJsBx[apfp-user-id] img {
     opacity: var(--user-avatar-opacity);
 }
 .APFP {
