@@ -17,7 +17,8 @@
 .cozyMessage-3V1Y8y:hover .APFP,
 .layout-2DM8Md:hover .avatarStack-2Dr8S9,
 .selected-aXhQR6 .layout-2DM8Md .avatarStack-2Dr8S9,
-.content-1Wq3SX:hover .APFP {
+.content-1Wq3SX:hover .APFP,
+.wrapper-2QE8vf .APFP {
     background-image: var(--user-avatar-playing);
 }
 .avatarStack-2Dr8S9,
