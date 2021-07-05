@@ -315,24 +315,25 @@ const rtcUserPatch = () => BdApi.Patcher.after("RTCUsersPatch", RTCUsers, "defau
 const ConnectedCallAvatar = BdApi.findModuleByDisplayName("CallAvatar");
 const connectedCallAvatarPatch = () => BdApi.Patcher.after("ConnectedCallAvatarPatch", ConnectedCallAvatar.prototype, "renderVoiceCallAvatar", (that, args, value) => {
     const instance = that;
-    const [props] = args;
-    console.log("Instance: ", instance, "\nProps: ", props, "\nValue: ", value);
-    const userID = instance._reactInternalFiber.key;
-    const APFP = {
-        className: "APFP",
-        style: {
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "inherit", 
-            height: "inherit",
-            borderRadius: "50%"
-        },
-        "apfp-user-id": userID
-    };
-    if (value.props.children.length <= 3) {
-        value.props.children.push(BdApi.React.createElement("div", APFP));
+    try {
+        if (value.props.children.length <= 3) {
+            const userID = instance._reactInternalFiber.key;
+            const APFP = {
+                className: "APFP",
+                style: {
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "inherit",
+                    height: "inherit",
+                    borderRadius: "50%"
+                },
+                "apfp-user-id": userID
+            };
+            value.props.children.push(BdApi.React.createElement("div", APFP));
+        }
     }
+    catch (error) { console.log(error) }
     return value;
 });
 function unpatchAll() {
