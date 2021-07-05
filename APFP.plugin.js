@@ -4,11 +4,12 @@
 * @source       https://github.com/rmkx/APFP
 * @author       rmkx, p0rtL
 * @invite       HnGWVQbQBv
-* @version      1.0beta
+* @version      1.0 Beta
 */
 
 
 module.exports = class test {
+    getName() { return "Animated Profile Picture"; }
     load() { }
     start() {
         dmListPatch();
