@@ -25,6 +25,8 @@ module.exports = class test {
         userProfilePatch();
         userCardPatch();
         chatAvatarPatch();
+        rtcUserPatch();
+        connectedCallAvatarPatch();
         cssInterval = setInterval(function () {
             if (document.querySelector("bd-styles #APFP")) {
                 BdApi.clearCSS("APFP");
@@ -288,6 +290,51 @@ const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessage
     }
     return value;
 });
+const RTCUsers = BdApi.findModule((m) => m?.default?.displayName === 'RTCConnectionVoiceUsers');
+const rtcUserPatch = () => BdApi.Patcher.after("RTCUsersPatch", RTCUsers, "default", (that, args, value) => {
+    try {
+        const originalRef = typeof value.ref === "function" ? value.ref : null;
+        value.ref = (e) => {
+            if (!e) return originalRef ? originalRef(e) : e;
+            const avatarNode = e.querySelector(".avatarContainer-2LLZwy");
+            if (!avatarNode.hasAttribute("apfp-user-id")) {
+                const avatarUserID = value.props.children.props.children[0][0].props.user.id;
+                let APFPDiv = document.createElement("div");
+                APFPDiv.className = "APFP";
+                APFPDiv.style = "position: absolute; top: 2px; width: 24px; height: 24px; border-radius: 50%;";
+                APFPDiv.setAttribute("apfp-user-id", avatarUserID);
+                avatarNode.setAttribute("apfp-user-id", avatarUserID);
+                avatarNode.append(APFPDiv);
+            }
+            return originalRef ? originalRef(e) : e;
+        };
+    }
+    catch (error) { console.log(error) }
+    return value;
+});
+const ConnectedCallAvatar = BdApi.findModuleByDisplayName("CallAvatar");
+const connectedCallAvatarPatch = () => BdApi.Patcher.after("ConnectedCallAvatarPatch", ConnectedCallAvatar.prototype, "renderVoiceCallAvatar", (that, args, value) => {
+    const instance = that;
+    const [props] = args;
+    console.log("Instance: ", instance, "\nProps: ", props, "\nValue: ", value);
+    const userID = instance._reactInternalFiber.key;
+    const APFP = {
+        className: "APFP",
+        style: {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "inherit", 
+            height: "inherit",
+            borderRadius: "50%"
+        },
+        "apfp-user-id": userID
+    };
+    if (value.props.children.length <= 3) {
+        value.props.children.push(BdApi.React.createElement("div", APFP));
+    }
+    return value;
+});
 function unpatchAll() {
     BdApi.Patcher.unpatchAll("DMListPatch");
     BdApi.Patcher.unpatchAll("DMListUpdatePatch");
@@ -304,4 +351,6 @@ function unpatchAll() {
     BdApi.Patcher.unpatchAll("UserProfilePatch");
     BdApi.Patcher.unpatchAll("UserCardPatch");
     BdApi.Patcher.unpatchAll("ChatAvatarPatch");
+    BdApi.Patcher.unpatchAll("RTCUsersPatch");
+    BdApi.Patcher.unpatchAll("ConnectedCallAvatarPatch");
 }
