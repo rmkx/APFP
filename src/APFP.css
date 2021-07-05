@@ -1,4 +1,5 @@
-.avatarStack-2Dr8S9 img {
+.avatarStack-2Dr8S9 img,
+.wrapper-1BJsBx img {
     opacity: var(--user-avatar-opacity);
 }
 .APFP {
@@ -13,7 +14,8 @@
 .content-1Wq3SX:hover .APFP {
     background-image: var(--user-avatar-playing);
 }
-.avatarStack-2Dr8S9 {
+.avatarStack-2Dr8S9,
+.wrapper-1BJsBx {
     background-image: var(--user-avatar-playing);
     border-radius: 50%;
     background-size: cover;
