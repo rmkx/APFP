@@ -56,7 +56,7 @@ function getPreviousSiblings(el, val) {
 function getNextSiblings(el, val) {
     var siblings = [];
     while (el = el.nextSibling) { siblings.push(el); }
-    form = siblings[3];
+    form = siblings[1];
     form.setAttribute("value", val);
 }
 function Approve(elem) {
