@@ -31,27 +31,23 @@ function getApproved() {
         statusBar = document.getElementById(usrId);
         switch (src) {
             case "0":
-                getPreviousSiblings(appr, "0");
+                appr = document.querySelector(`input[name='${elem.id}']`);
+                appr.setAttribute("value", "0");
                 statusBar.style.backgroundColor = "var(--pending)";
                 break;
             case "1":
-                getPreviousSiblings(appr, "1");
+                appr = document.querySelector(`input[name='${elem.id}']`);
+                appr.setAttribute("value", "1");
                 statusBar.style.backgroundColor = "var(--accepted)";
                 break;
             case "2":
-                getPreviousSiblings(appr, "2");
+                appr = document.querySelector(`input[name='${elem.id}']`);
+                appr.setAttribute("value", "2");
                 statusBar.style.backgroundColor = "var(--denied)";
                 break;
         }
     });
 };
-
-function getPreviousSiblings(el, val) {
-    var siblings = [];
-    while (el = el.previousSibling) { siblings.push(el); }
-    form = siblings[2];
-    form.setAttribute("value", val);
-}
 
 function Approve(elem) {
     //console.log(elem)
