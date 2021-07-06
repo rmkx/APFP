@@ -1,7 +1,7 @@
 :root {
     --accepted: #59804D;
     --pending: #e9c46aff;
-    --denied: #e76f51;
+    --denied: #ff3300;
 }
 
 .websiteBackground, .websiteBackground .texture, .websiteBackground .background {
@@ -84,9 +84,8 @@ img:nth-of-type(2) {
 
 #myData {
     display: none;
-    grid-auto-rows: auto;
-    grid-auto-columns: 12.5%;
-    grid-auto-flow: column;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
 img[src="0"], img[src="1"], img[src="2"], .ApprForm {
@@ -110,6 +109,7 @@ img[src="0"], img[src="1"], img[src="2"], .ApprForm {
     width: 100%;
     height: 6px;
     grid-row: row3;
+    border: none;
 }
 
 .ResponseWrapper {

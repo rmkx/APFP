@@ -7,7 +7,7 @@ function fetchData() {
             const datArray = Object.keys(data);
             datArray.forEach((datArray, index) => {
                 output += "<div class='ResponseWrapper'>"
-                output += `<p class="userId">${datArray}</p><div class='statusBar' id=${datArray}></div>`
+                output += `<p class="userId">${datArray}</p><button class='statusBar' id=${datArray}></button>`
                 for (var property in data[datArray]) {
                     //console.log(datArray + property + data[datArray][property]);
                     output += `<img class="rqIMG" data-user-id="${datArray}" src='${data[datArray][property]}'></img>`
@@ -61,7 +61,7 @@ function pageLoader() {
 }
 function showSite() {
     document.getElementById("loader").style.display = "none";
-    document.getElementById("myData").style.display = "grid";
+    document.getElementById("myData").style.display = "flex";
     getApproved();
 }
 

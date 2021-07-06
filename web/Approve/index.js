@@ -7,7 +7,7 @@ function fetchData() {
             const datArray = Object.keys(data);
             datArray.forEach((datArray, index) => {
                 output += "<div class='ResponseWrapper'>"
-                output += `<p class="userId">${datArray}</p><div onclick="Approve(this)" class='statusBar' id=${datArray}></div>`
+                output += `<p class="userId">${datArray}</p><button onclick="Approve(this)" class='statusBar' type='button' id=${datArray}></button>`
                 output += `<input type="text" class="ApprForm" name="${datArray}" value="0">`
                 for (var property in data[datArray]) {
                     //console.log(datArray + property + data[datArray][property]);
@@ -52,12 +52,6 @@ function getPreviousSiblings(el, val) {
     form = siblings[2];
     form.setAttribute("value", val);
 }
-function getPreviousSiblings(el, val) {
-    var siblings = [];
-    while (el = el.previousSibling) { siblings.push(el); }
-    form = siblings[2];
-    form.setAttribute("value", val);
-}
 
 function getNextSiblings(el, val) {
     var siblings = [];
@@ -81,7 +75,7 @@ function Approve(elem) {
             getNextSiblings(content, "2");
             content.style.backgroundColor = "var(--denied)";
             break;
-        case "rgb(231, 111, 81)":
+        case "rgb(255, 51, 0)":
             getNextSiblings(content, "0");
             content.style.backgroundColor = "var(--pending)";
             break;
@@ -98,7 +92,7 @@ function pageLoader() {
 }
 function showSite() {
     document.getElementById("loader").style.display = "none";
-    document.getElementById("myData").style.display = "grid";
+    document.getElementById("myData").style.display = "flex";
     getApproved();
 }
 
