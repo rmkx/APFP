@@ -296,15 +296,17 @@ const rtcUserPatch = () => BdApi.Patcher.after("RTCUsersPatch", RTCUsers, "defau
         const originalRef = typeof value.ref === "function" ? value.ref : null;
         value.ref = (e) => {
             if (!e) return originalRef ? originalRef(e) : e;
-            const avatarNode = e.querySelector(".avatarContainer-2LLZwy");
-            if (!avatarNode.hasAttribute("apfp-user-id")) {
-                const avatarUserID = value.props.children.props.children[0][0].props.user.id;
-                let APFPDiv = document.createElement("div");
-                APFPDiv.className = "APFP";
-                APFPDiv.style = "position: absolute; top: 2px; width: 24px; height: 24px; border-radius: 50%;";
-                APFPDiv.setAttribute("apfp-user-id", avatarUserID);
-                avatarNode.setAttribute("apfp-user-id", avatarUserID);
-                avatarNode.append(APFPDiv);
+            const avatarNode = e.querySelectorAll(".avatarContainer-2LLZwy");
+            for(let i = 0; i < avatarNode.length; i++) {
+                if (!avatarNode[i].hasAttribute("apfp-user-id")) {
+                    const avatarUserID = value.props.children.props.children[0][i].props.user.id;
+                    let APFPDiv = document.createElement("div");
+                    APFPDiv.className = "APFP";
+                    APFPDiv.style = "position: absolute; top: 2px; width: 24px; height: 24px; border-radius: 50%;";
+                    APFPDiv.setAttribute("apfp-user-id", avatarUserID);
+                    avatarNode[i].setAttribute("apfp-user-id", avatarUserID);
+                    avatarNode[i].append(APFPDiv);
+                }
             }
             return originalRef ? originalRef(e) : e;
         };
