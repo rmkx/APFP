@@ -1,0 +1,137 @@
+:root {
+    --accepted: #59804D;
+    --pending: #e9c46aff;
+    --denied: #e76f51;
+}
+
+.websiteBackground, .websiteBackground .texture, .websiteBackground .background {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.websiteBackground .texture {
+    background: url('https://cdn.discordapp.com/attachments/827579823026470993/854851374260944958/B8vv0rR1.png') center/cover no-repeat;
+    opacity: 0.35;
+    z-index: 1;
+}
+
+.websiteBackground .background {
+    background: rgb(10, 10, 10);
+    z-index: 0;
+}
+
+img {
+    border-radius: 50%;
+    position: absolute;
+    grid-row: row2;
+    width: 90px;
+    height: 90px;
+}
+
+img:first-of-type {
+    left: 10px;
+}
+
+img:nth-of-type(2) {
+    right: 10px;
+}
+
+@keyframes loaderSpin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%);
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgb(30, 30, 30);
+    border-top-color: #7d96e9b2;
+    border-radius: 50%;
+    animation: loaderSpin 1.5s ease;
+    -moz-animation: loaderSpin 1.5s ease;
+    -webkit-animation: loaderSpin 1.5s ease;
+    -o-animation: loaderSpin 1.5s ease;
+    animation-iteration-count: 2;
+    -moz-animation-iteration-count: 2;
+    -webkit-animation-iteration-count: 2;
+    -o-animation-iteration-count: 2;
+}
+
+@keyframes previewAnimation {
+    from {
+        opacity: 0;
+        transform: translateY(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#myData {
+    display: none;
+    grid-auto-rows: auto;
+    grid-auto-columns: 12.5%;
+    grid-auto-flow: column;
+}
+
+img[src="0"], img[src="1"], img[src="2"], .ApprForm {
+    display: none;
+}
+
+.userId {
+    position: relative;
+    grid-row: row1;
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 18px;
+    color: #7d96e9b2;
+    font-weight: bold;
+}
+
+.statusBar {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    grid-row: row3;
+    background-color: red;
+}
+
+.ResponseWrapper {
+    position: relative;
+    display: grid;
+    grid-template-rows: [row1] 15% [row2] 65% [row3] 20%;
+    grid-template-columns: [col1] 100%;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 250px;
+    background-color: #141414;
+    box-shadow: 0px 0px 5px #7d96e960;
+    padding: 8px;
+    border-radius: 12px;
+    opacity: 0;
+    animation: previewAnimation .8s ease;
+    -moz-animation: previewAnimation .8s ease;
+    -webkit-animation: previewAnimation .8s ease;
+    -o-animation: previewAnimation .8s ease;
+    animation-fill-mode: forwards;
+    -webkit-animation-fill-mode: forwards;
+    -o-animation-fill-mode: forwards;
+}

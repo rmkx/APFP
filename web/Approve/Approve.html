@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Approve APFP</title>
+</head>
+<body>
+    <h1 id="loader">Loading...</h1>
+    <form name="regform" action="https://APFP-JS-API.p0rtl.repl.co/EditUsers" method="POST">
+        <div id="myData"></div>
+        <input type="text" name="TOKEN" value="Token">
+        <button type="submit" id="submitbutton">Submit</button>
+    </form>
+</body>
+<script>
+
+    function fetchData() {
+    fetch('https://apfp-js-api.p0rtl.repl.co/ReqAll')
+        .then((res) => res.json())
+        .then((data) => {
+        let output = ""
+        const datArray = Object.keys(data);
+        datArray.forEach((datArray, index) => {
+            output += "<div class='ResponseWrapper'>"
+            output += `<p class="Request">Request</p><svg id="${datArray}" onclick="Approve(this)" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M8 10h-5l9-10 9 10h-5v10h-8v-10zm11 9v3h-14v-3h-2v5h18v-5h-2z"/></svg><p class="userId">${datArray}</p>`
+            //output += `<input type="text" class="ApprForm" name="ApprovedId" value="${datArray}">`
+            output += `<input type="text" class="ApprForm" name="${datArray}" value="0">`
+            for(var property in data[datArray]) {
+                //console.log(datArray + property + data[datArray][property]);
+                output += `<img class="rqIMG" data-user-id="${datArray}" src='${data[datArray][property]}'></img>`
+            }
+            output += "</div>"
+        });
+        
+        document.getElementById('myData').innerHTML = output;
+        })
+        .catch((error) => {
+        console.log(`Error Fetching data : ${error}`)
+        document.getElementById('myData').innerHTML = 'Error Loading Data'
+        })
+    }
+
+    function getApproved() {
+        appr = Array.from(document.getElementsByClassName('rqIMG'))
+        appr.forEach((appr, index) => {
+            src = appr.getAttribute("src")
+            usrId = appr.getAttribute("data-user-id")
+            svg = document.getElementById(usrId)
+            switch(src) {
+                case "0":
+                getPreviousSiblings(appr, "0");
+                svg.style.fill = "var(--pending)"; 
+                break;
+                case "1":
+                getPreviousSiblings(appr, "1");
+                svg.style.fill = "var(--accepted)";
+                break;
+                case "2":
+                getPreviousSiblings(appr, "2");
+                svg.style.fill = "var(--denied)";
+                break;
+            }
+        });
+    };
+
+    function getPreviousSiblings(el, val) {
+	    var siblings = [];
+	    while (el = el.previousSibling) {siblings.push(el);}
+        form = siblings[2];
+        form.setAttribute("value", val);
+	}
+
+    function getNextSiblings(el, val) {
+	    var siblings = [];
+	    while (el = el.nextSibling) {siblings.push(el);}
+        form = siblings[1];
+        form.setAttribute("value", val);
+	}
+
+    function deleteLoader() {
+        loader = document.getElementById("loader");
+        loader.style.display = "none";
+    }
+
+    function Approve(elem) {
+        //console.log(elem)
+        var content = document.getElementById(elem.id);
+        var contentCss = getComputedStyle(content);
+        var contentFill = contentCss.fill;
+        //console.log(contentFill);
+        content.style.fill = "white";
+        switch(contentFill) {
+        case "rgb(233, 196, 106)":
+        getNextSiblings(content, "1");
+        content.style.fill = "var(--accepted)";
+        break;
+        case "rgb(89, 128, 77)":
+        getNextSiblings(content, "2");
+        content.style.fill = "var(--denied)";
+        break;
+        case "rgb(231, 111, 81)":
+        getNextSiblings(content, "0");
+        content.style.fill = "var(--pending)";
+        break;
+        default:
+        alert ("Err: no status change match");
+        }
+    }
+
+
+    fetchData()
+    setTimeout(getApproved, 1000);
+    setTimeout(deleteLoader, 1000);
+
+</script>
+<style>
+
+:root {
+    --accepted: #59804D;
+    --pending: #e9c46aff;
+    --denied: #e76f51;
+}
+
+    #loader {
+        color: white;
+        display: flex;
+        justify-content: center;
+    }
+    
+    img[src="0"], img[src="1"], img[src="2"], .ApprForm {
+        display: none;
+    }
+    
+    
+    svg {
+        position: absolute;
+        bottom: 25px;
+        left: 10px;
+        width: 100px;
+        height: auto;
+    }
+
+    body {
+        background-color: #264653;
+    }
+
+    .Request {
+        position: absolute;
+        background-color: #8AB17D;
+        top: -40px;
+        left: 10px;
+        width: auto;
+        height: auto;
+        border-radius: 4px;
+        padding: 10px;
+        font-size: 50px;
+        text-align: center;
+    }
+
+    .userId {
+        position: absolute;
+        background-color: #2A9D8F;
+        top: 80px;
+        left: 10px;
+        width: auto;
+        height: auto;
+        border-radius: 4px;
+        padding: 5px;
+        text-align: center;
+    }
+
+    img:not(:nth-child(6)) {
+        border-radius: 50%;
+        position: absolute;
+        bottom: 5px;
+        right: 5px;
+        width: 175px;
+        height: 175px;
+    }
+
+    img:nth-child(6) {
+        border-radius: 50%;
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 100px;
+        height: 100px;
+    }
+
+    #myData {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    .ResponseWrapper {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        background-color: #287271;
+        margin: 6px;
+        border-radius: 8px;
+    }
+
+</style>
+</html>
