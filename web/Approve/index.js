@@ -53,12 +53,6 @@ function getPreviousSiblings(el, val) {
     form.setAttribute("value", val);
 }
 
-function getNextSiblings(el, val) {
-    var siblings = [];
-    while (el = el.nextSibling) { siblings.push(el); }
-    form = siblings[1];
-    form.setAttribute("value", val);
-}
 function Approve(elem) {
     //console.log(elem)
     var content = document.getElementById(elem.id);
@@ -68,15 +62,18 @@ function Approve(elem) {
     content.style.backgroundColor = "white";
     switch (contentFill) {
         case "rgb(233, 196, 106)":
-            getNextSiblings(content, "1");
+            appr = document.querySelector(`input[name='${elem.id}']`);
+            appr.setAttribute("value", "1");
             content.style.backgroundColor = "var(--accepted)";
             break;
         case "rgb(89, 128, 77)":
-            getNextSiblings(content, "2");
+            appr = document.querySelector(`input[name='${elem.id}']`);
+            appr.setAttribute("value", "2");
             content.style.backgroundColor = "var(--denied)";
             break;
         case "rgb(255, 51, 0)":
-            getNextSiblings(content, "0");
+            appr = document.querySelector(`input[name='${elem.id}']`);
+            appr.setAttribute("value", "0");
             content.style.backgroundColor = "var(--pending)";
             break;
         default:
