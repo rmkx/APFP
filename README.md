@@ -3,8 +3,24 @@
 ![WARN](https://img.shields.io/badge/WARNING-ffcc00?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDEwMDAgMTAwMCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBhdGggZD0ibTUwMCA5OC44IDQxMC43IDgxOC41SDg5LjNMNTAwIDk4Ljh6bTAtODguOGMtMjEuMSAwLTQyLjIgMTQuMi01OC4zIDQyLjdMMjMuNCA4ODYuNEMtOC42IDk0My40IDE4LjcgOTkwIDg0IDk5MGg4MzJjNjUuNCAwIDkyLjYtNDYuNiA2MC42LTEwMy42TDU1OC4yIDUyLjdDNTQyLjIgMjQuMiA1MjEuMSAxMCA1MDAgMTB6Ii8+PHBhdGggZD0iTTU2MS4zIDgwNi4zYzAgMzMuOC0yNy40IDYxLjMtNjEuMyA2MS4zLTMzLjggMC02MS4zLTI3LjQtNjEuMy02MS4zIDAtMzMuOCAyNy40LTYxLjMgNjEuMy02MS4zczYxLjMgMjcuNCA2MS4zIDYxLjN6TTUwMCA2ODMuOGMtMzMuOCAwLTYxLjMtMjcuNC02MS4zLTYxLjNWNDM4LjdjMC0zMy44IDI3LjQtNjEuMyA2MS4zLTYxLjMgMzMuOCAwIDYxLjMgMjcuNCA2MS4zIDYxLjN2MTgzLjhjMCAzMy44LTI3LjQgNjEuMy02MS4zIDYxLjN6Ii8+PC9zdmc+)
 [![Download](https://img.shields.io/badge/Download-gray?style=for-the-badge&logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACMBAMAAABc7lwNAAAAHlBMVEX///8AAAAqKir9/f3V1dUMDAzExMR/f3/u7u5HcEzsmKQTAAAACnRSTlP/EkT9uCi0gOkAQx5NsAAAAgNJREFUaN7t2D1qw0AQhuEF5QIbUMKWBhu1LoIO4JxAOYKPEAikTJELbKnbRpHt7N/MfEMUSDOul3cfbFnakZv/5OMsYxnLWMYylrGMZf4vE4RMDNqK94HNxH5SdmL/OrEZP5wnJWb4PAQmE+/fx4OKs6x0p4nJ+OGj03GWle4u39GVWzgVZ11ZcFy5hVNx1pUFx1VbaDjXlTkny6xbaDgXTMFx6Uq4bIE5N0zOSZrHyxaYc8MsnDYTH45OxUkYKjP3z07FSRh3ar+b2e9VnByzC9QPruLkGE9efhoOjSn/DAoOjSn/mpjDYKobBeQwmOq2hTgcprqJIg6HqW7pgMNi6ieDzGEx9XNK5PCYOiNyeEzz1BQ4AqbJCBwB0z7DWY6EaTMsR8IQJwqGI2KIDMMRMdT5huTIGCpDcmQMedoiOABDZggOwNBnv5bzImPoTMPpAYY5idYchGEyFQdiuHNxwYkQw2UKTsJ0DIY9peechHliMGwm52AMPzNkHIzhMxnnCDHCBJM4R4gRMomDMdI8lTgQI2UqTnf2v5vuSs4oYMRMwREx8qyZc0SMnMk4MgZMvtmlLGJA5ofTncOWOfzGGXebxvkrZ8Fs0lw5CAMzKwdi8DuKbw7E4MzCwRjFGxO/H/FMrXjx0r9BjCYTor3bsoxlLGMZy1jGMpaxjGUss+3zBdmzZQd2ikHhAAAAAElFTkSuQmCC)](https://github.com/rmkx/APFP/releases/download/V.10-Beta/APFP.plugin.js)
 ---
-## To request an Animated Profile Picture join [this](https://discord.gg/xzwKqwvQcP) Discord server.
-## The website for the verification status of requests can be found [Here](https://rmkx.github.io/APFP/web/)
-## This plugin is currently in beta and is still being developed
-Please be patient and report bugs in the Issues tab, or to either of the authors.
+# Installation:
+1. Download the plugin by clicking [this link.](https://github.com/rmkx/APFP/releases/download/V.10-Beta/APFP.plugin.js)
+2. Having [BetterDiscord](https://betterdiscord.app/) installed, go to the "Plugins" tab on your Discord settings, and click the "Open Plugins folder" button.
+3. Move the plugin file you downloaded into the folder that opened when clicking the button.
+4. Enable the plugin in the "Plugins" tab. Now you will be able to see people's Animated Profile Pictures, and they will see yours.
+5. Make a request for an Animated Profile picture by following the following section.
 
+## Requesting a picture: 
+To request an Animated Profile Picture join [this](https://discord.gg/xzwKqwvQcP) Discord server, and get into the **#apfp-requests** channel.
+Send a message following the following structure:
+```
+$pfp <Link to static image> <Link to animated image>
+```
+*(make sure to remove the **<>** before sending the mesage).*
+
+If the request goes through with the bot, you'll see it in the **#apfp-requests** channel. Then you only have to wait for your images to be reviewed to check they don't contain any NSFW/gore elements. The status of your request can be seen in [this](https://rmkx.github.io/APFP/web/) website.
+
+For further questions, you can check the **#apfp** channel in the Discord server.
+
+## This plugin is currently in beta and is still being developed
+Please be patient and report bugs in the Issues tab, or in the **#bug-reports** channel in the Discord server.
