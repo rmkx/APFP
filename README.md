@@ -13,7 +13,7 @@ APFP, short for Animated Profile Picture, is a plugin plus CSS "database" combin
 # How does it work?
 As stated in the previous section, it is a combination of a plugin and a CSS database. CSS is a file extension that's used to style HTML elements. It follows the same principle that Discord themes do, it styles Discord. 
 
-**But then, why the need for a plugin?** Simple, we need something to diferentiate user from user so each one can have their own, personal APFP. To do this, we add Discord's asociated user ID *(which you can check for everyone by rightclicking their username with Developer Mode enabled)* to different HTML Divs where Discord places the default avatars. 
+**But then, why the need for a plugin?** Simple, we need something to diferentiate user from user so each one can have their own, personal APFP. To do this, we add Discord's asociated user ID *(which you can check for everyone by rightclicking their username with Developer Mode enabled)* to different HTML Divs where Discord places the avatars. 
 
 Another reason is that, for some places, we had to add an HTML Div to get the behaviour we wanted, like to make pictures animate when speaking. This can't be done with CSS alone and requires the creation of a plugin.
 # Installation:
@@ -21,7 +21,7 @@ Another reason is that, for some places, we had to add an HTML Div to get the be
 2. Having [BetterDiscord](https://betterdiscord.app/) installed, go to the "Plugins" tab on your Discord settings, and click the "Open Plugins folder" button.
 3. Move the plugin file you downloaded into the folder that opened when clicking the button.
 4. Enable the plugin in the "Plugins" tab. Now you will be able to see people's Animated Profile Pictures, and they will see yours.
-5. Make a request for an Animated Profile picture by following the following section.
+5. Make a request for an Animated Profile picture by following the next section.
 
 ## Requesting a picture: 
 To request an Animated Profile Picture join [this](https://discord.gg/xzwKqwvQcP) Discord server, and get into the **#apfp-requests** channel.
