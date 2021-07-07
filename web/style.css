@@ -123,6 +123,7 @@ img[src="0"], img[src="1"], img[src="2"], .ApprForm {
     height: 250px;
     background-color: #141414;
     box-shadow: 0px 0px 5px #7d96e960;
+    margin: 8px;
     padding: 8px;
     border-radius: 12px;
     opacity: 0;
