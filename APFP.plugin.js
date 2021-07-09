@@ -341,53 +341,56 @@ const connectedCallAvatarPatch = () => BdApi.Patcher.after("ConnectedCallAvatarP
 });
 const SearchResultsPopout = BdApi.findModuleByDisplayName("SearchResultsPopout");
 const searchResultsPopoutPatch = () => BdApi.Patcher.after("SearchResultsPopoutAvatarPatch", SearchResultsPopout.prototype, "render", (that, args, value) => {
-    const originalRef = typeof value.ref === "function" ? value.ref : null;
-    value.ref = (e) => {
-        if (!e) return originalRef ? originalRef(e) : e;
-        if (e.querySelector(".user-O3Czj0")) {
-            const searchResults = e.querySelectorAll(".user-O3Czj0");
-            for (let i = 0; i < searchResults.length; i++) {
-                if (!searchResults[i].querySelector(".APFP")) {
-                    const userID = searchResults[i].__reactInternalInstance$.return.return.return.memoizedProps.result.id;
-                    let APFPDiv = document.createElement("div");
-                    APFPDiv.className = "APFP";
-                    APFPDiv.style = "position: absolute; top: 8px; width: 18px; height: 18px; border-radius: 50%; margin-left: -23px;";
-                    APFPDiv.setAttribute("apfp-user-id", userID);
-                    searchResults[i].querySelector(".displayedNick-3xxvzU").append(APFPDiv);
+    try {
+        const originalRef = typeof value.ref === "function" ? value.ref : null;
+        value.ref = (e) => {
+            if (!e) return originalRef ? originalRef(e) : e;
+            if (e.querySelector(".user-O3Czj0")) {
+                const searchResults = e.querySelectorAll(".user-O3Czj0");
+                for (let i = 0; i < searchResults.length; i++) {
+                    if (!searchResults[i].querySelector(".APFP")) {
+                        const userID = searchResults[i].__reactInternalInstance$.return.return.return.memoizedProps.result.id;
+                        let APFPDiv = document.createElement("div");
+                        APFPDiv.className = "APFP";
+                        APFPDiv.style = "position: absolute; top: 8px; width: 18px; height: 18px; border-radius: 50%; margin-left: -23px;";
+                        APFPDiv.setAttribute("apfp-user-id", userID);
+                        searchResults[i].querySelector(".displayedNick-3xxvzU").append(APFPDiv);
+                    }
                 }
             }
+            return originalRef ? originalRef(e) : e;
         }
-        return originalRef ? originalRef(e) : e;
     }
+    catch (error) { console.log(error) }
     return value;
 });
 const SearchResultMessages = BdApi.findModuleByDisplayName("SearchResult");
 const resultMessagesPatch = () => BdApi.Patcher.after("ResultMessagesAvatarPatch", SearchResultMessages.prototype, "render", (that, args, value) => {
-    const instance = that;
-    const [props] = args;
-    console.log("Instance: ", instance, "\nProps: ", props, "\nValue: ", value);
-    if (instance.hitRef.current) {
-        const result = instance.hitRef.current;
-        if (!result.querySelector(".APFP")) {
-            const userID = instance.props.result[0].author.id;
-            const avatarParentNode = result.querySelector(".contents-2mQqc9");
-            let APFPDiv = document.createElement("div");
-            APFPDiv.className = "APFP";
-            APFPDiv.style = "position: absolute; top: 0px; left: -56px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
-            APFPDiv.setAttribute("apfp-user-id", userID);
-            avatarParentNode.childNodes[1].insertBefore(APFPDiv, avatarParentNode.childNodes[1].childNodes[0]);
-            if(result.querySelector(".repliedMessage-VokQwo") && !result.querySelector(".replyBadge-r1su3o")) {
-                const repliedMessage = result.querySelector(".repliedMessage-VokQwo");
-                const replyUserID = repliedMessage.__reactInternalInstance$.stateNode.__reactInternalInstance$.memoizedProps.children[1].props.message.author.id;
+    try {
+        const instance = that;
+        if (instance.hitRef.current) {
+            const result = instance.hitRef.current;
+            if (!result.querySelector(".APFP")) {
+                const userID = instance.props.result[0].author.id;
+                const avatarParentNode = result.querySelector(".contents-2mQqc9");
                 let APFPDiv = document.createElement("div");
                 APFPDiv.className = "APFP";
-                APFPDiv.style = "position: absolute; left: 0px; width: 16px; height: 16px; border-radius: 50%; pointer-events: none; z-index: 1; user-select: none;";
-                APFPDiv.setAttribute("apfp-user-id", replyUserID);
-                repliedMessage.append(APFPDiv);
-
+                APFPDiv.style = "position: absolute; top: 0px; left: -56px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
+                APFPDiv.setAttribute("apfp-user-id", userID);
+                avatarParentNode.childNodes[1].insertBefore(APFPDiv, avatarParentNode.childNodes[1].childNodes[0]);
+                if (result.querySelector(".repliedMessage-VokQwo") && !result.querySelector(".replyBadge-r1su3o")) {
+                    const repliedMessage = result.querySelector(".repliedMessage-VokQwo");
+                    const replyUserID = repliedMessage.__reactInternalInstance$.stateNode.__reactInternalInstance$.memoizedProps.children[1].props.message.author.id;
+                    let APFPDiv = document.createElement("div");
+                    APFPDiv.className = "APFP";
+                    APFPDiv.style = "position: absolute; left: 0px; width: 16px; height: 16px; border-radius: 50%; pointer-events: none; z-index: 1; user-select: none;";
+                    APFPDiv.setAttribute("apfp-user-id", replyUserID);
+                    repliedMessage.append(APFPDiv);
+                }
             }
         }
     }
+    catch (error) { console.log(error) }
     return value;
 });
 function unpatchAll() {
