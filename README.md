@@ -35,5 +35,5 @@ If the request goes through with the bot, you'll see it in the **#apfp-requests*
 
 For further questions, you can check the **#apfp** channel in the Discord server.
 
-## This plugin is currently in beta and is still being developed
-Please be patient and report bugs in the Issues tab, or in the **#bug-reports** channel in the Discord server.
+## This plugin is fully functional but it's still in the beta stage.
+Please be patient and report bugs in the Issues tab, or in the **#bug-reports** channel in the Discord server. 
