@@ -4,7 +4,7 @@
 * @source       https://github.com/rmkx/APFP
 * @author       rmkx, p0rtL
 * @invite       HnGWVQbQBv
-* @version      1.0 Beta
+* @version      1.0.1 Beta
 */
 
 module.exports = class test {
@@ -28,6 +28,7 @@ module.exports = class test {
         connectedCallAvatarPatch();
         searchResultsPopoutPatch();
         resultMessagesPatch();
+        pinnedMessagesPatch();
         cssInterval = setInterval(function () {
             if (document.querySelector("bd-styles #APFP")) {
                 BdApi.clearCSS("APFP");
@@ -393,6 +394,34 @@ const resultMessagesPatch = () => BdApi.Patcher.after("ResultMessagesAvatarPatch
     catch (error) { console.log(error) }
     return value;
 });
+const PinnedMessages = BdApi.findModule((m) => m?.default?.displayName === "ChannelPins");
+const pinnedMessagesPatch = () => BdApi.Patcher.after("PinnedMessagesPatch", PinnedMessages, "default", (that, args, value) => {
+    const instance = that;
+    const [props] = args;
+    console.log("Instance :", instance, "\nProps: ", props, "\nValue: ", value);
+    try {
+        const originalRef = typeof value.ref === "function" ? value.ref : null;
+        value.ref = (e) => {
+            if (!e) return originalRef ? originalRef(e) : e;
+            if (e.querySelector(".contents-2mQqc9")) {
+                const pinnedMessages = e.querySelectorAll(".contents-2mQqc9");
+                for (let i = 0; i < pinnedMessages.length; i++) {
+                    if (!pinnedMessages[i].querySelector(".APFP")) {
+                        const userID = value.props.children.props.messages[i].author.id ? value.props.children.props.messages[i].author.id : undefined;
+                        let APFPDiv = document.createElement("div");
+                        APFPDiv.className = "APFP";
+                        APFPDiv.style = "position: absolute; top: 0px; left: -56px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
+                        APFPDiv.setAttribute("apfp-user-id", userID);
+                        pinnedMessages[i].childNodes[1].insertBefore(APFPDiv, pinnedMessages[i].childNodes[1].childNodes[0]);
+                    }
+                }
+            }
+            return originalRef ? originalRef(e) : e;
+        }
+    }
+    catch (error) { console.log(error) }
+    return value;
+});
 function unpatchAll() {
     BdApi.Patcher.unpatchAll("DMListPatch");
     BdApi.Patcher.unpatchAll("DMListUpdatePatch");
@@ -413,4 +442,5 @@ function unpatchAll() {
     BdApi.Patcher.unpatchAll("ConnectedCallAvatarPatch");
     BdApi.Patcher.unpatchAll("SearchResultsPopoutAvatarPatch");
     BdApi.Patcher.unpatchAll("ResultMessagesAvatarPatch");
+    BdApi.Patcher.unpatchAll("PinnedMessagesPatch");
 }
