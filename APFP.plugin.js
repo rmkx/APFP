@@ -7,7 +7,7 @@
 * @version      1.0.2 Beta
 */
 
-module.exports = class test {
+module.exports = class APFP {
     getName() { return "Animated Profile Picture"; }
     load() { }
     start() {
