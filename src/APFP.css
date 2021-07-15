@@ -37,3 +37,9 @@
     background-size: cover;
     border-radius: 50%;
 }
+
+[apfp-user-id='857381927542718504'] {
+    --user-avatar-static: url('https://i.imgur.com/cPgObrq.png');
+    --user-avatar-playing: url('https://i.imgur.com/m04u9ko.gif');
+    --user-avatar-opacity: 0;
+}
