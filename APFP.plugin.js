@@ -4,7 +4,7 @@
 * @source       https://github.com/rmkx/APFP
 * @author       rmkx, p0rtL
 * @invite       HnGWVQbQBv
-* @version      1.0.1 Beta
+* @version      1.0.2 Beta
 */
 
 module.exports = class test {
@@ -194,6 +194,7 @@ const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", 
         APFPDiv.className = "APFP";
         APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: 24px; height: 24px; border-radius: 50%; margin-left: 8px;";
         APFPDiv.setAttribute("apfp-user-id", instance.props.user.id);
+        avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
         avatarStackNode.insertBefore(APFPDiv, avatarStackNode.childNodes[1]);
     }
     catch (error) { console.log(error); return value; }
@@ -231,6 +232,7 @@ async function userCardPatch() {
                             APFPDiv.className = "APFP";
                             APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
                             APFPDiv.setAttribute("apfp-user-id", avatarUserID);
+                            maskedAvatars[i].setAttribute("apfp-user-id", avatarUserID);
                             maskedAvatars[i].insertBefore(APFPDiv, maskedAvatars[i].childNodes[0]);
                         }
                     }
@@ -277,6 +279,7 @@ const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessage
                     APFPDiv.className = "APFP";
                     APFPDiv.style = "position: absolute; left: 0px; width: 16px; height: 16px; border-radius: 50%; pointer-events: none; z-index: 1; user-select: none;";
                     APFPDiv.setAttribute("apfp-user-id", replyUserID);
+                    replyNode.setAttribute("apfp-user-id", replyUserID);
                     replyNode.append(APFPDiv);
                 }
                 const avatarParentNode = e.querySelector(".contents-2mQqc9");
@@ -285,6 +288,7 @@ const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessage
                 APFPDiv.className = "APFP";
                 APFPDiv.style = "position: absolute; top: 0px; left: -56px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
                 APFPDiv.setAttribute("apfp-user-id", userID);
+                avatarParentNode.setAttribute("apfp-user-id", userID);
                 avatarParentNode.childNodes[1].insertBefore(APFPDiv, avatarParentNode.childNodes[1].childNodes[0]);
             }
             return originalRef ? originalRef(e) : e;
@@ -355,6 +359,7 @@ const searchResultsPopoutPatch = () => BdApi.Patcher.after("SearchResultsPopoutA
                         APFPDiv.className = "APFP";
                         APFPDiv.style = "position: absolute; top: 8px; width: 18px; height: 18px; border-radius: 50%; margin-left: -23px;";
                         APFPDiv.setAttribute("apfp-user-id", userID);
+                        searchResults[i].setAttribute("apfp-user-id", userID);
                         searchResults[i].querySelector(".displayedNick-3xxvzU").append(APFPDiv);
                     }
                 }
@@ -378,6 +383,7 @@ const resultMessagesPatch = () => BdApi.Patcher.after("ResultMessagesAvatarPatch
                 APFPDiv.className = "APFP";
                 APFPDiv.style = "position: absolute; top: 0px; left: -56px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
                 APFPDiv.setAttribute("apfp-user-id", userID);
+                avatarParentNode.setAttribute("apfp-user-id", userID);
                 avatarParentNode.childNodes[1].insertBefore(APFPDiv, avatarParentNode.childNodes[1].childNodes[0]);
                 if (result.querySelector(".repliedMessage-VokQwo") && !result.querySelector(".replyBadge-r1su3o")) {
                     const repliedMessage = result.querySelector(".repliedMessage-VokQwo");
@@ -386,6 +392,7 @@ const resultMessagesPatch = () => BdApi.Patcher.after("ResultMessagesAvatarPatch
                     APFPDiv.className = "APFP";
                     APFPDiv.style = "position: absolute; left: 0px; width: 16px; height: 16px; border-radius: 50%; pointer-events: none; z-index: 1; user-select: none;";
                     APFPDiv.setAttribute("apfp-user-id", replyUserID);
+                    repliedMessage.setAttribute("apfp-user-id", replyUserID);
                     repliedMessage.append(APFPDiv);
                 }
             }
@@ -412,6 +419,7 @@ const pinnedMessagesPatch = () => BdApi.Patcher.after("PinnedMessagesPatch", Pin
                         APFPDiv.className = "APFP";
                         APFPDiv.style = "position: absolute; top: 0px; left: -56px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
                         APFPDiv.setAttribute("apfp-user-id", userID);
+                        pinnedMessages[i].setAttribute("apfp-user-id", userID);
                         pinnedMessages[i].childNodes[1].insertBefore(APFPDiv, pinnedMessages[i].childNodes[1].childNodes[0]);
                     }
                 }

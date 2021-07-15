@@ -1,8 +1,7 @@
 #app-mount .avatar-1BDn8e + h2 {
     overflow: visible;
 }
-.avatarStack-2Dr8S9 img,
-.wrapper-1BJsBx[apfp-user-id] img {
+[apfp-user-id] img {
     opacity: var(--user-avatar-opacity);
 }
 .APFP {
