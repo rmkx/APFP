@@ -259,7 +259,6 @@ const userProfilePatch = () => BdApi.Patcher.after("UserProfilePatch", UserProfi
             avatarStackNode.setAttribute("apfp-user-id", userId);
             return originalRef ? originalRef(e) : e;
         }
-        value.props.children.ref(e);
     }
     catch (error) { console.log(error); return value; }
     return value;
