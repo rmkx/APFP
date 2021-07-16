@@ -43,3 +43,19 @@
     --user-avatar-playing: url('https://i.imgur.com/m04u9ko.gif');
     --user-avatar-opacity: 0;
 }
+
+[apfp-user-id='857381927542718504'] .botTag-2WPJ74 {
+  background: linear-gradient(to right, orange , yellow, green, cyan, blue, violet);
+  background-size: 400% 100%;
+  animation: rainbow_animation 6s linear infinite;
+}
+
+@keyframes rainbow_animation {
+  0%,100% {
+      background-position: 0 0;
+  }
+
+  50% {
+      background-position: 100% 0;
+  }
+}
