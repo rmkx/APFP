@@ -1,7 +1,7 @@
 #app-mount .avatar-1BDn8e + h2 {
     overflow: visible;
 }
-[apfp-user-id] img {
+[apfp-user-id] img:not([class*="emoji"]) {
     opacity: var(--user-avatar-opacity);
 }
 .APFP {
