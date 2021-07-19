@@ -38,3 +38,5 @@ For further questions, you can check the **#apfp** channel in the Discord server
 
 ## This plugin is fully functional but it's still in the beta stage.
 Please be patient and report bugs in the Issues tab, or in the **#bug-reports** channel in the Discord server. 
+
+If you are interested the documentation, all of the components of APFP can be found [here](https://rmkx.github.io/APFP/site/)
