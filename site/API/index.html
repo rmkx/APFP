@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>API - APFP</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css">
+
+        <script src="../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../js/bootstrap.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="..">APFP</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="navitem">
+                                <a href=".." class="nav-link">Home</a>
+                            </li>
+                            <li class="navitem active">
+                                <a href="./" class="nav-link">API</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Bot/" class="nav-link">Bot</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Discord/" class="nav-link">Discord</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Github/" class="nav-link">Github</a>
+                            </li>
+                            <li class="navitem">
+                                <a href="../Website/" class="nav-link">Website</a>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href=".." class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="../Bot/" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-secondary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-level="1"><a href="#api" class="nav-link">API</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-level="2"><a href="#basics-http-requests" class="nav-link">Basics - HTTP Requests</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#the-user-object" class="nav-link">The User Object</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#endpoints-overview" class="nav-link">Endpoints - Overview</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-level="2"><a href="#endpoints-details-examples" class="nav-link">Endpoints - Details &amp; Examples</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="api">API</h1>
+<h3 id="written-in-node-js">Written in <a href="https://nodejs.org/en/">Node Js</a></h3>
+<p><br></p>
+<h2 id="basics-http-requests">Basics - HTTP Requests</h2>
+<table style="width:75%;">
+  <tr>
+    <th style="border-bottom: 1px solid darkgrey;">Method</th>
+    <th style="border-bottom: 1px solid darkgrey;">Action</th>
+  </tr>
+  <tr>
+    <td>GET</td>
+    <td>Requests a representation of the specified resource</td>
+  </tr>
+  <tr>
+    <td>POST</td>
+    <td>Used to submit an entity to the specified resource</td>
+  </tr>
+  <sub>Descriptions provided courtesy of <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods">MDN</a></sub>
+</table>
+<p><br></p>
+<div id="UserObj"></div>
+
+<h2 id="the-user-object">The User Object</h2>
+<p><br></p>
+<p>The user object is the main data that is being transferred in this Api, you will be using this a lot. The base object is formatted as shown in the following code block:</p>
+
+<pre><code>{'userId':UserID, 'staticImage':IMG_Static, 'animatedImage':IMG_Playing}
+</code></pre>
+<p><small>Note: There are certain endpoints that require a modified user object, but they will always contain these base items.</small>
+<br></p>
+<h2 id="endpoints-overview">Endpoints - Overview</h2>
+<table style="width: 100%;">
+  <tr>
+    <th style="border-bottom: 1px solid darkgrey;">URL</th>
+    <th style="border-bottom: 1px solid darkgrey;">Description</th>
+    <th style="border-bottom: 1px solid darkgrey;">Params</th>
+    <th style="border-bottom: 1px solid darkgrey;">Type</th>
+  </tr>
+  <tr id="AddUserTB">
+    <td><a href="#AddUser">/AddUser</a><br><small> <a href="/Helper">Bot</a></small></td>
+    <td>The endpoint used to create user entries into the database, these requests await approval before being commited. This endpoint is used by the Discord bot</td>
+    <td><code>User Id, Static Image, Animated Image, Token</code></td>
+    <td>POST</td>
+  </tr>
+  <tr id="AddUserBTNTB">
+    <td><a href="#AddUserBTN">/AddUserBTN<br><small> <a href="/Bot">Discord</a></small></td>
+    <td>The endpoint used to create user entries into the database, these requests await approval before being commited. This endpoint is <b>pending use</b> in the settings menu of Discord.</td>
+    <td><code>User Id, Static Image, Animated Image</code></td>
+    <td>POST</td>
+  </tr>
+    <tr id="EditUsersTB">
+    <td><a href="#EditUsers">/EditUsers<br><small> <a href="/Website">Website</a></small></td>
+    <td>The endpoint used to approve and commit users to the database, this is triggered by the website's approve page</td>
+    <td><code>User Id, Static Image, Animated Image, Approved Status, Token</code></td>
+    <td>POST</td>
+  </tr>
+    </tr>
+    <tr id="ReqUserTB">
+    <td><a href="#ReqUser">/ReqUser<br><small> <a>Not In Use</a></small></td>
+    <td>The endpoint used to retrieve individual users by their Id, currently not in use by any existing components.</td>
+    <td><code>User Id</code></td>
+    <td>GET</td>
+  </tr>
+    </tr>
+    <tr id="ReqAllTB">
+    <td><a href="#ReqAll">/ReqAll<br><small> <a href="/Website">Website</a></small></td>
+    <td>The endpoint used to retrieve individual users by their Id, currently not in use by any existing components.</td>
+    <td><code><b>No Params</b></code></td>
+    <td>GET</td>
+  </tr>
+    </tr>
+    <tr id="Oauth2TB">
+    <td><a href="#Oauth2">/Oauth2<br><small> <a href="/Bot">Discord</a></small></td>
+    <td>The endpoint used by the <b>pending</b> settings menu option for setting profile pictures, this is the authorization aspect of the menu (prevents user Id spoofing). runs through the Discord Oauth2 system. This endpoint is meant to be paired with the <a href="#AddUserBTNTB">/AddUserBTN</a> endpoint.</td>
+    <td><code><b>No Params</b></code></td>
+    <td>POST</td>
+  </tr>
+</table>
+<p><br></p>
+<h2 id="endpoints-details-examples">Endpoints - Details &amp; Examples</h2>
+<p><br></p>
+<h3 id="adduser-post">/AddUser <sub id="AddUser"><small>POST</small></sub></h3>
+<p>This endpoint is used by the Discord bot to make the initial request to the database. This is hosted on the Repl.it for the Api and is stored in Json formatting. Requests are taken from this initial database in other actions and the website is built upon this. This endpoint uses a modified <a href="#UserObj">user object</a> with an added token that is stored in the bot as an environment variable.</p>
+
+<p>Example:</p>
+<pre><code class="language-Python">    url = 'https://APFP-JS-API.p0rtl.repl.co/AddUser'
+    data = {'userId':UserID, 'staticImage':IMG_Static, 'animatedImage':IMG_Playing, 'TOKEN':RQTOKEN}
+    headers = {'Auth': &quot;Token&quot;}
+    requests.post(url, data = data, headers = headers)
+</code></pre>
+<p><sub>Note: Token is deprecated for future use in the request body.</sub>
+<br></p>
+<h3 id="adduserbtn-post">/AddUserBTN <sub id="AddUserBTN"><small>POST</small></sub></h3>
+<p>This endpoint <b>will</b> be used in the future for the settings menu option of setting a profile picture. This functions in the same way as the primary /AddUser endpoint, with authorization being handled differently. This endpoint is to be used in conjuction with the /Oauth2 endpoint for authorization, due to this it uses the basic <a href="#UserObj">user object.</a></p>
+
+<p>Example:</p>
+<pre><code class="language-Python">    url = 'https://APFP-JS-API.p0rtl.repl.co/AddUserBTN'
+    data = {'userId':UserID, 'staticImage':IMG_Static, 'animatedImage':IMG_Playing}
+    requests.post(url, data = data)
+</code></pre>
+<h3 id="editusers-post">/EditUsers <sub id="EditUsers"><small>POST</small></sub></h3>
+<p>This endpoint is used by the website for approving and pushing users to the final database hosted on the Github repository for APFP. This endpoint triggers an update of the approved status for each user. It also triggers the api to compile the Json database to css for use in the plugin. This is the css that is finally pushed to the repo. This endpoint uses a modified <a href="#UserObj">user object</a> with an additional item for approve status.</p>
+
+<p>Example:</p>
+<pre><code class="language-Python">    url = 'https://APFP-JS-API.p0rtl.repl.co/EditUsers'
+    data = {'userId':UserID, 'staticImage':IMG_Static, 'animatedImage':IMG_Playing, 'Approved':ApprovedStatus}
+    requests.post(url, data = data)
+</code></pre>
+<p>The approved status is based on a number system:</p>
+<ul>
+<li>0 - Pending</li>
+<li>1 - Approved</li>
+<li>2 - Denied
+<br></li>
+</ul>
+<h3 id="requser-get">/ReqUser <sub id="ReqUser"><small>GET</small></sub></h3>
+<p>This endpoint is used to retrieve a single user by their Id. This will return the modified <a href="#UserObj">user object</a> that includes the approve status. This is not currently used in any components of the APFP system.</p>
+
+<p>Example:</p>
+<pre><code class="language-Python">    url = 'https://APFP-JS-API.p0rtl.repl.co/ReqUser'
+    data = {'userId':UserID}
+    requests.get(url, data = data)
+</code></pre>
+<p><br></p>
+<h3 id="reqall-get">/ReqAll <sub id="ReqAll"><small>GET</small></sub></h3>
+<p>This endpoint is the alternative to /ReqUser, it returns all of the users stored in the Repl.it database. It will return the data as <a href="#UserObj">user objects</a>.</p>
+
+<p>Example:</p>
+<pre><code class="language-Python">    url = 'https://APFP-JS-API.p0rtl.repl.co/ReqAll'
+    requests.get(url)
+</code></pre>
+<p><br></p>
+<h3 id="oauth2-post">/Oauth2 <sub id="Oauth2"><small>POST</small></sub></h3>
+<p><b>Under Construction</b></p></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js" defer></script>
+        <script src="../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
