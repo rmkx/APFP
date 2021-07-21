@@ -62,9 +62,12 @@ const DMListAvatar = BdApi.findModuleByDisplayName("PrivateChannel");
 const dmListPatch = () => BdApi.Patcher.after("DMListPatch", DMListAvatar.prototype, "componentDidMount", (that, args, value) => {
     const instance = that;
     try {
-        const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
-        const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
-        avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
+        if (instance.props.channel.type === 1) {
+            const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
+            const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
+            avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
+        }
+        else { return value; }
     }
     catch (error) { console.log(error); return value; }
     return value;
@@ -72,9 +75,11 @@ const dmListPatch = () => BdApi.Patcher.after("DMListPatch", DMListAvatar.protot
 const dmListUpdatePatch = () => BdApi.Patcher.after("DMListUpdatePatch", DMListAvatar.prototype, "componentDidUpdate", (that, args, value) => {
     const instance = that;
     try {
-        const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
-        const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
-        if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id); }
+        if (instance.props.channel.type === 1) {
+            const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
+            const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
+            if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id); }
+        }
     }
     catch (error) { console.log(error); return value; }
     return value;
@@ -189,13 +194,15 @@ const VoiceChannelUsers = BdApi.findModuleByDisplayName("VoiceUser");
 const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", VoiceChannelUsers.prototype, "componentDidMount", (that, args, value) => {
     const instance = that;
     try {
-        const avatarStackNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.stateNode;
-        let APFPDiv = document.createElement("div");
-        APFPDiv.className = "APFP";
-        APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: 24px; height: 24px; border-radius: 50%; margin-left: 8px;";
-        APFPDiv.setAttribute("apfp-user-id", instance.props.user.id);
-        avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
-        avatarStackNode.insertBefore(APFPDiv, avatarStackNode.childNodes[1]);
+        if (instance.props.user) {
+            const avatarStackNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.stateNode;
+            let APFPDiv = document.createElement("div");
+            APFPDiv.className = "APFP";
+            APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: 24px; height: 24px; border-radius: 50%; margin-left: 8px;";
+            APFPDiv.setAttribute("apfp-user-id", instance.props.user.id);
+            avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
+            avatarStackNode.insertBefore(APFPDiv, avatarStackNode.childNodes[1]);
+        }
     }
     catch (error) { console.log(error); return value; }
     return value;
@@ -206,9 +213,10 @@ async function userCardPatch() {
     const userCardAvatar = () => BdApi.Patcher.after("UserCardPatch", UserCardFunc.prototype, "componentDidMount", (that, args, value) => {
         try {
             const instance = that;
+            const [props] = args;
             const currentRef = typeof instance.elementRef.current !== null ? instance.elementRef.current : null;
             if (currentRef) {
-                if (currentRef.id !== null && currentRef.id !== "" && currentRef.querySelector("foreignObject")) {
+                if (currentRef.id !== null && currentRef.id !== "" && currentRef.querySelector("foreignObject") && !currentRef.querySelector(".tooltipContent-bqVLWK")) {
                     const avatarStackNode = currentRef.querySelector("foreignObject").childNodes[0];
                     const userId = currentRef.__reactInternalInstance$.stateNode.childNodes[0].childNodes[0].childNodes[0].__reactInternalInstance$.memoizedProps.children.props.user.id;
                     if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
@@ -216,24 +224,28 @@ async function userCardPatch() {
                 else if (currentRef.querySelector(".avatarContainer-3CQrif")) {
                     const lastAvatar = currentRef.querySelectorAll(".avatarContainer-3CQrif");
                     for (let i = 0; i < lastAvatar.length; i++) {
-                        const lastAvatarID = lastAvatar[i].__reactInternalInstance$.key;
-                        let APFPDiv = document.createElement("div");
-                        APFPDiv.className = "APFP";
-                        APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
-                        APFPDiv.setAttribute("apfp-user-id", lastAvatarID);
-                        lastAvatar[i].insertBefore(APFPDiv, lastAvatar[i].childNodes[0]);
-                        lastAvatar[i].setAttribute("apfp-user-id", lastAvatarID);
-                    }
-                    if (currentRef.querySelector("foreignObject")) {
-                        const maskedAvatars = currentRef.querySelectorAll("foreignObject");
-                        for (let i = 0; i < maskedAvatars.length; i++) {
-                            const avatarUserID = maskedAvatars[i].__reactInternalInstance$.child.key;
+                        if (!lastAvatar[i].hasAttribute("apfp-user-id")) {
+                            const lastAvatarID = lastAvatar[i].__reactInternalInstance$.key;
                             let APFPDiv = document.createElement("div");
                             APFPDiv.className = "APFP";
                             APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
-                            APFPDiv.setAttribute("apfp-user-id", avatarUserID);
-                            maskedAvatars[i].setAttribute("apfp-user-id", avatarUserID);
-                            maskedAvatars[i].insertBefore(APFPDiv, maskedAvatars[i].childNodes[0]);
+                            APFPDiv.setAttribute("apfp-user-id", lastAvatarID);
+                            lastAvatar[i].insertBefore(APFPDiv, lastAvatar[i].childNodes[0]);
+                            lastAvatar[i].setAttribute("apfp-user-id", lastAvatarID);
+                        }
+                    }
+                    if (currentRef.querySelector(".avatarContainerMasked-PIJ-3L")) {
+                        const maskedAvatars = currentRef.querySelectorAll("foreignObject");
+                        for (let i = 0; i < maskedAvatars.length; i++) {
+                            if (!maskedAvatars[i].hasAttribute("apfp-user-id")) {
+                                const avatarUserID = maskedAvatars[i].__reactInternalInstance$.child.key;
+                                let APFPDiv = document.createElement("div");
+                                APFPDiv.className = "APFP";
+                                APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
+                                APFPDiv.setAttribute("apfp-user-id", avatarUserID);
+                                maskedAvatars[i].setAttribute("apfp-user-id", avatarUserID);
+                                maskedAvatars[i].insertBefore(APFPDiv, maskedAvatars[i].childNodes[0]);
+                            }
                         }
                     }
                     else { return value; }
