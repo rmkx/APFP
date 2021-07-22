@@ -5,7 +5,7 @@
 * @updateUrl    https://raw.githubusercontent.com/rmkx/APFP/main/APFP.plugin.js
 * @author       rmkx, p0rtL
 * @invite       HnGWVQbQBv
-* @version      1.0.2 Beta
+* @version      1.0.3 Beta
 */
 
 module.exports = class APFP {
@@ -27,16 +27,16 @@ module.exports = class APFP {
         chatAvatarPatch();
         rtcUserPatch();
         connectedCallAvatarPatch();
-        //searchResultsPopoutPatch(); /*don't uncomment it crashes Discord*/
+        searchResultsPopoutPatch();
         resultMessagesPatch();
         pinnedMessagesPatch();
-        cssInterval()
-        updateCss()
+        cssInterval();
+        updateCss();
 
     }
     stop() {
         unpatchAll();
-        clearInterval(clearCssInt);
+        if (clearCssInt) { clearInterval(clearCssInt); }
         if (document.querySelector("bd-styles #APFP")) { BdApi.clearCSS("APFP"); }
     }
     getSettingsPanel() {
@@ -57,12 +57,15 @@ const getElementByComponentName = componentName => new Promise(resolve => {
     };
     getElement();
 });
+const getInternalInstance = (node) => {
+    if (node.__reactInternalInstance$) return node.__reactInternalInstance$;
+    return node[Object.keys(node).find(k => k.startsWith("__reactInternalInstance") || k.startsWith("__reactFiber"))] || null;
+}
+
 const DMListAvatar = BdApi.findModuleByDisplayName("PrivateChannel");
 const dmListPatch = () => BdApi.Patcher.after("DMListPatch", DMListAvatar.prototype, "componentDidMount", (that, args, value) => {
     const instance = that;
-    const [props] = args;
     try {
-        console.log("1: ", instance, "\n2: ", props, "\n3: ", value);
         if (instance.props.channel.type === 1) {
             const svgChildrenNodes = instance._reactInternals.stateNode._reactInternals.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
             const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
@@ -113,6 +116,7 @@ const friendsListPatch = () => BdApi.Patcher.after("FriendsListAvatarPatch", Fri
         const svgChildrenNodes = instance._reactInternals.stateNode._reactInternals.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
         const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
         avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
+        instance.forceUpdate();
     }
     catch (error) { console.log(error); return value; }
     return value;
@@ -172,7 +176,7 @@ const newDm = () => BdApi.Patcher.after("NewDirectMessagePatcher", NewDirectMess
 });
 async function patchUserSection() {
     const UserInfo = await getElementByComponentName(".container-3baos1");
-    const Fiber = UserInfo[Object.keys(UserInfo).find(k => k.startsWith("__reactInternalInstance") || k.startsWith("__reactFiber"))];
+    const Fiber = getInternalInstance(UserInfo);
     const UserInfoAvatar = Fiber.return.type;
     const userInfoAvatarPatch = () => BdApi.Patcher.after("UserInfoAvatarPatch", UserInfoAvatar.prototype, "render", (that, args, value) => {
         const instance = that;
@@ -211,23 +215,27 @@ const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", 
 });
 async function userCardPatch() {
     const UserCard = await getElementByComponentName(".layer-v9HyYc");
-    const UserCardFunc = UserCard.__reactInternalInstance$.return.type;
+    const Fiber = getInternalInstance(UserCard);
+    const UserCardFunc = Fiber.return.type;
     const userCardAvatar = () => BdApi.Patcher.after("UserCardPatch", UserCardFunc.prototype, "componentDidMount", (that, args, value) => {
         try {
             const instance = that;
-            const [props] = args;
             const currentRef = typeof instance.elementRef.current !== null ? instance.elementRef.current : null;
+            const currentRefFiber = getInternalInstance(currentRef);
             if (currentRef) {
                 if (currentRef.id !== null && currentRef.id !== "" && currentRef.querySelector("foreignObject") && !currentRef.querySelector(".tooltipContent-bqVLWK")) {
                     const avatarStackNode = currentRef.querySelector("foreignObject").childNodes[0];
-                    const userId = currentRef.__reactInternalInstance$.stateNode.childNodes[0].childNodes[0].childNodes[0].__reactInternalInstance$.memoizedProps.children.props.user.id;
+                    const userIdNode = currentRefFiber.stateNode.childNodes[0].childNodes[0].childNodes[0];
+                    const userIdFiber = getInternalInstance(userIdNode);
+                    const userId = userIdFiber.memoizedProps.children.props.user.id;
                     if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", userId); }
                 }
                 else if (currentRef.querySelector(".avatarContainer-3CQrif")) {
                     const lastAvatar = currentRef.querySelectorAll(".avatarContainer-3CQrif");
                     for (let i = 0; i < lastAvatar.length; i++) {
                         if (!lastAvatar[i].hasAttribute("apfp-user-id")) {
-                            const lastAvatarID = lastAvatar[i].__reactInternalInstance$.key;
+                            const lastAvatarIDFiber = getInternalInstance(lastAvatar[i]);
+                            const lastAvatarID = lastAvatarIDFiber.key;
                             let APFPDiv = document.createElement("div");
                             APFPDiv.className = "APFP";
                             APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
@@ -240,7 +248,8 @@ async function userCardPatch() {
                         const maskedAvatars = currentRef.querySelectorAll("foreignObject");
                         for (let i = 0; i < maskedAvatars.length; i++) {
                             if (!maskedAvatars[i].hasAttribute("apfp-user-id")) {
-                                const avatarUserID = maskedAvatars[i].__reactInternalInstance$.child.key;
+                                const avatarUserIDFiber = getInternalInstance(maskedAvatars[i]);
+                                const avatarUserID = avatarUserIDFiber.child.key;
                                 let APFPDiv = document.createElement("div");
                                 APFPDiv.className = "APFP";
                                 APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: inherit; height: inherit; border-radius: 50%;";
@@ -367,7 +376,8 @@ const searchResultsPopoutPatch = () => BdApi.Patcher.after("SearchResultsPopoutA
                 const searchResults = e.querySelectorAll(".user-O3Czj0");
                 for (let i = 0; i < searchResults.length; i++) {
                     if (!searchResults[i].querySelector(".APFP")) {
-                        const userID = searchResults[i].__reactInternalInstance$.return.return.return.memoizedProps.result.id;
+                        const userIdFiber = getInternalInstance(searchResults[i]);
+                        const userID = userIdFiber.return.return.return.memoizedProps.result.id;
                         let APFPDiv = document.createElement("div");
                         APFPDiv.className = "APFP";
                         APFPDiv.style = "position: absolute; top: 8px; width: 18px; height: 18px; border-radius: 50%; margin-left: -23px;";
@@ -400,7 +410,8 @@ const resultMessagesPatch = () => BdApi.Patcher.after("ResultMessagesAvatarPatch
                 avatarParentNode.childNodes[1].insertBefore(APFPDiv, avatarParentNode.childNodes[1].childNodes[0]);
                 if (result.querySelector(".repliedMessage-VokQwo") && !result.querySelector(".replyBadge-r1su3o")) {
                     const repliedMessage = result.querySelector(".repliedMessage-VokQwo");
-                    const replyUserID = repliedMessage.__reactInternalInstance$.stateNode.__reactInternalInstance$.memoizedProps.children[1].props.message.author.id;
+                    const repliedMessageFiber = getInternalInstance(repliedMessage);
+                    const replyUserID = getInternalInstance(repliedMessageFiber.stateNode).memoizedProps.children[1].props.message.author.id;
                     let APFPDiv = document.createElement("div");
                     APFPDiv.className = "APFP";
                     APFPDiv.style = "position: absolute; left: 0px; width: 16px; height: 16px; border-radius: 50%; pointer-events: none; z-index: 1; user-select: none;";
@@ -416,9 +427,6 @@ const resultMessagesPatch = () => BdApi.Patcher.after("ResultMessagesAvatarPatch
 });
 const PinnedMessages = BdApi.findModule((m) => m?.default?.displayName === "ChannelPins");
 const pinnedMessagesPatch = () => BdApi.Patcher.after("PinnedMessagesPatch", PinnedMessages, "default", (that, args, value) => {
-    const instance = that;
-    const [props] = args;
-    console.log("Instance :", instance, "\nProps: ", props, "\nValue: ", value);
     try {
         const originalRef = typeof value.ref === "function" ? value.ref : null;
         value.ref = (e) => {
@@ -447,27 +455,35 @@ const pinnedMessagesPatch = () => BdApi.Patcher.after("PinnedMessagesPatch", Pin
 const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
     const [value, setValue] = BdApi.React.useState(props[valueProp]);
     return BdApi.React.createElement(Component, {
-      ...props,
-      [valueProp]: value,
-      [changeProp]: value => {
-        if (typeof props[changeProp] === "function") props[changeProp](value);
-        setValue(value);
-      }
+        ...props,
+        [valueProp]: value,
+        [changeProp]: value => {
+            if (typeof props[changeProp] === "function") props[changeProp](value);
+            setValue(value);
+        }
     });
 }
 
 const Dropdown = createUpdateWrapper(BdApi.findModuleByProps("SingleSelect").SingleSelect);
-const menuTimes = ["Don't Update", 30, 45, 60, 90, 120]
+const menuTimes = ["Don't Update", 30, 45, 60, 90, 120];
 
 function buildMenu(menuTimes) {
     var menuOptions = []
     menuTimes.forEach(mTime => {
-        menuOptions.push({
-            label: mTime,
-            value: mTime
-        })
+        if (typeof mTime === "number") {
+            menuOptions.push({
+                label: mTime + " minutes",
+                value: mTime
+            });
+        }
+        else {
+            menuOptions.push({
+                label: mTime,
+                value: mTime
+            });
+        }
     });
-    return menuOptions
+    return menuOptions;
 }
 
 function settingsPanel() {
@@ -476,30 +492,30 @@ function settingsPanel() {
         options: buildMenu(menuTimes),
         onChange: (value) => {
             BdApi.saveData("APFP", "Timer", value);
-            cssInterval()
+            cssInterval();
         }
     })
     var title = BdApi.React.createElement('h1', {
-        style: {"font-size": "1.2em", "color": "var(--text-normal)"}
-    }, "Select Time Interval for css auto re-injection")
+        style: { "font-size": "1em", "color": "var(--text-normal)" }
+    }, "Select a Time Interval for CSS auto re-injection");
     var br = BdApi.React.createElement('br', null);
     var container = BdApi.React.createElement('div', null, title, br, dropdownMenu);
-    return container
+    return container;
 }
 
 function cssInterval() {
     interval = BdApi.getData("APFP", "Timer");
-    if (typeof(interval) == "number") {
+    if (typeof (interval) == "number") {
         interval *= 60000;
-        clearInterval(clearCssInt);
+        if (clearCssInt) { clearInterval(clearCssInt); }
         clearCssInt = setInterval(updateCss, interval);
     } else {
-        clearInterval(clearCssInt);
+        if (clearCssInt) { clearInterval(clearCssInt); }
     }
 }
 
 function updateCss() {
-    console.log("Updating Css")
+    console.log("Updating APFP CSS Database")
     if (document.querySelector("bd-styles #APFP")) {
         BdApi.clearCSS("APFP");
         BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`);
