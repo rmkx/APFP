@@ -116,7 +116,6 @@ const friendsListPatch = () => BdApi.Patcher.after("FriendsListAvatarPatch", Fri
         const svgChildrenNodes = instance._reactInternals.stateNode._reactInternals.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
         const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
         avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
-        instance.forceUpdate();
     }
     catch (error) { console.log(error); return value; }
     return value;
