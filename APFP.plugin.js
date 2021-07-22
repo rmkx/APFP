@@ -37,6 +37,9 @@ module.exports = class APFP {
         clearInterval(clearCssInt);
         if (document.querySelector("bd-styles #APFP")) { BdApi.clearCSS("APFP"); }
     }
+    getSettingsPanel() {
+        return settingsPanel()
+    }
 
     observer(changes) { }
 }
