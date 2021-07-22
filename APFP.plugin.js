@@ -376,7 +376,7 @@ const searchResultsPopoutPatch = () => BdApi.Patcher.after("SearchResultsPopoutA
                 for (let i = 0; i < searchResults.length; i++) {
                     if (!searchResults[i].querySelector(".APFP")) {
                         const userIdFiber = getInternalInstance(searchResults[i]);
-                        const userID = userIdFiber.return.return.return.memoizedProps.result.id;
+                        const userID = userIdFiber.return.return.return.memoizedProps.result.user.id;
                         let APFPDiv = document.createElement("div");
                         APFPDiv.className = "APFP";
                         APFPDiv.style = "position: absolute; top: 8px; width: 18px; height: 18px; border-radius: 50%; margin-left: -23px;";
