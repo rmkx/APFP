@@ -2,6 +2,7 @@
 * @name         AnimatedProfilePicture
 * @description  Adds nitro-like animated profile pictures
 * @source       https://github.com/rmkx/APFP
+* @updateUrl    https://raw.githubusercontent.com/rmkx/APFP/main/APFP.plugin.js
 * @author       rmkx, p0rtL
 * @invite       HnGWVQbQBv
 * @version      1.0.2 Beta
