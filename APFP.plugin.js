@@ -30,7 +30,8 @@ module.exports = class APFP {
         resultMessagesPatch();
         pinnedMessagesPatch();
         cssInterval()
-        updateCss()  
+        updateCss()
+
     }
     stop() {
         unpatchAll();
@@ -43,7 +44,7 @@ module.exports = class APFP {
 
     observer(changes) { }
 }
-let cssInterval;
+var clearCssInt;
 const getElementByComponentName = componentName => new Promise(resolve => {
     const getElement = () => {
         const element = document.querySelector(componentName);
