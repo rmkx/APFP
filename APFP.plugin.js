@@ -29,18 +29,12 @@ module.exports = class APFP {
         //searchResultsPopoutPatch(); /*don't uncomment it crashes Discord*/
         resultMessagesPatch();
         pinnedMessagesPatch();
-        cssInterval = setInterval(function () {
-            if (document.querySelector("bd-styles #APFP")) {
-                BdApi.clearCSS("APFP");
-                BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`);
-            }
-            else { BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`); }
-        }, 2700000);
-        if (!document.querySelector("bd-styles #APFP")) { BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`); }
+        cssInterval()
+        updateCss()  
     }
     stop() {
         unpatchAll();
-        clearInterval(cssInterval);
+        clearInterval(clearCssInt);
         if (document.querySelector("bd-styles #APFP")) { BdApi.clearCSS("APFP"); }
     }
 
@@ -444,6 +438,70 @@ const pinnedMessagesPatch = () => BdApi.Patcher.after("PinnedMessagesPatch", Pin
     catch (error) { console.log(error) }
     return value;
 });
+
+const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
+    const [value, setValue] = BdApi.React.useState(props[valueProp]);
+    return BdApi.React.createElement(Component, {
+      ...props,
+      [valueProp]: value,
+      [changeProp]: value => {
+        if (typeof props[changeProp] === "function") props[changeProp](value);
+        setValue(value);
+      }
+    });
+}
+
+const Dropdown = createUpdateWrapper(BdApi.findModuleByProps("SingleSelect").SingleSelect);
+const menuTimes = ["Don't Update", 30, 45, 60, 90, 120]
+
+function buildMenu(menuTimes) {
+    var menuOptions = []
+    menuTimes.forEach(mTime => {
+        menuOptions.push({
+            label: mTime,
+            value: mTime
+        })
+    });
+    return menuOptions
+}
+
+function settingsPanel() {
+    var dropdownMenu = BdApi.React.createElement(Dropdown, {
+        value: BdApi.getData("APFP", "Timer"),
+        options: buildMenu(menuTimes),
+        onChange: (value) => {
+            BdApi.saveData("APFP", "Timer", value);
+            cssInterval()
+        }
+    })
+    var title = BdApi.React.createElement('h1', {
+        style: {"font-size": "1.2em", "color": "var(--text-normal)"}
+    }, "Select Time Interval for css auto re-injection")
+    var br = BdApi.React.createElement('br', null);
+    var container = BdApi.React.createElement('div', null, title, br, dropdownMenu);
+    return container
+}
+
+function cssInterval() {
+    interval = BdApi.getData("APFP", "Timer");
+    if (typeof(interval) == "number") {
+        interval *= 60000;
+        clearInterval(clearCssInt);
+        clearCssInt = setInterval(updateCss, interval);
+    } else {
+        clearInterval(clearCssInt);
+    }
+}
+
+function updateCss() {
+    console.log("Updating Css")
+    if (document.querySelector("bd-styles #APFP")) {
+        BdApi.clearCSS("APFP");
+        BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`);
+    }
+    else { BdApi.injectCSS("APFP", `@import url(https://rmkx.github.io/APFP/src/APFP.Import.css)`); }
+}
+
 function unpatchAll() {
     BdApi.Patcher.unpatchAll("DMListPatch");
     BdApi.Patcher.unpatchAll("DMListUpdatePatch");
