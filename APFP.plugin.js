@@ -26,7 +26,7 @@ module.exports = class APFP {
         chatAvatarPatch();
         rtcUserPatch();
         connectedCallAvatarPatch();
-        searchResultsPopoutPatch();
+        //searchResultsPopoutPatch(); /*don't uncomment it crashes Discord*/
         resultMessagesPatch();
         pinnedMessagesPatch();
         cssInterval = setInterval(function () {
@@ -61,9 +61,11 @@ const getElementByComponentName = componentName => new Promise(resolve => {
 const DMListAvatar = BdApi.findModuleByDisplayName("PrivateChannel");
 const dmListPatch = () => BdApi.Patcher.after("DMListPatch", DMListAvatar.prototype, "componentDidMount", (that, args, value) => {
     const instance = that;
+    const [props] = args;
     try {
+        console.log("1: ", instance, "\n2: ", props, "\n3: ", value);
         if (instance.props.channel.type === 1) {
-            const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
+            const svgChildrenNodes = instance._reactInternals.stateNode._reactInternals.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
             const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
             avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
         }
@@ -76,7 +78,7 @@ const dmListUpdatePatch = () => BdApi.Patcher.after("DMListUpdatePatch", DMListA
     const instance = that;
     try {
         if (instance.props.channel.type === 1) {
-            const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
+            const svgChildrenNodes = instance._reactInternals.stateNode._reactInternals.child.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
             const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
             if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id); }
         }
@@ -88,7 +90,7 @@ const MemberListAvatar = BdApi.findModuleByDisplayName("MemberListItem");
 const memberListPatch = () => BdApi.Patcher.after("MemberListAvatarPatch", MemberListAvatar.prototype, "componentDidMount", (that, args, value) => {
     const instance = that;
     try {
-        const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
+        const svgChildrenNodes = instance._reactInternals.stateNode._reactInternals.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
         const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
         avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
     }
@@ -98,7 +100,7 @@ const memberListPatch = () => BdApi.Patcher.after("MemberListAvatarPatch", Membe
 const memberListUpdatePatch = () => BdApi.Patcher.after("MemberListUpdateAvatarPatch", MemberListAvatar.prototype, "componentDidUpdate", (that, args, value) => {
     const instance = that;
     try {
-        const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
+        const svgChildrenNodes = instance._reactInternals.stateNode._reactInternals.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
         const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
         if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id); }
     }
@@ -109,7 +111,7 @@ const FriendsListAvatar = BdApi.findModuleByDisplayName("PeopleListItem");
 const friendsListPatch = () => BdApi.Patcher.after("FriendsListAvatarPatch", FriendsListAvatar.prototype, "componentDidMount", (that, args, value) => {
     const instance = that;
     try {
-        const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
+        const svgChildrenNodes = instance._reactInternals.stateNode._reactInternals.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
         const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
         avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id);
     }
@@ -119,7 +121,7 @@ const friendsListPatch = () => BdApi.Patcher.after("FriendsListAvatarPatch", Fri
 const friendsListUpdatePatch = () => BdApi.Patcher.after("FriendsListUpdateAvatarPatch", FriendsListAvatar.prototype, "componentDidUpdate", (that, args, value) => {
     const instance = that;
     try {
-        const svgChildrenNodes = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
+        const svgChildrenNodes = instance._reactInternals.stateNode._reactInternals.child.child.child.child.child.child.child.child.child.child.child.stateNode.childNodes;
         const avatarStackNode = svgChildrenNodes.length > 2 ? svgChildrenNodes[1].childNodes[0] : svgChildrenNodes[0].childNodes[0];
         if (!avatarStackNode.hasAttribute("apfp-user-id")) { avatarStackNode.setAttribute("apfp-user-id", instance.props.user.id); }
     }
@@ -171,7 +173,8 @@ const newDm = () => BdApi.Patcher.after("NewDirectMessagePatcher", NewDirectMess
 });
 async function patchUserSection() {
     const UserInfo = await getElementByComponentName(".container-3baos1");
-    const UserInfoAvatar = UserInfo.__reactInternalInstance$.return.type;
+    const Fiber = UserInfo[Object.keys(UserInfo).find(k => k.startsWith("__reactInternalInstance") || k.startsWith("__reactFiber"))];
+    const UserInfoAvatar = Fiber.return.type;
     const userInfoAvatarPatch = () => BdApi.Patcher.after("UserInfoAvatarPatch", UserInfoAvatar.prototype, "render", (that, args, value) => {
         const instance = that;
         try {
@@ -188,14 +191,14 @@ async function patchUserSection() {
         return value;
     });
     userInfoAvatarPatch();
-    document.querySelector(".container-3baos1").__reactInternalInstance$.return.stateNode.forceUpdate();
+    Fiber.return.stateNode.forceUpdate();
 }
 const VoiceChannelUsers = BdApi.findModuleByDisplayName("VoiceUser");
 const voiceChannelAvatar = () => BdApi.Patcher.after("VoiceChannelAvatarPatch", VoiceChannelUsers.prototype, "componentDidMount", (that, args, value) => {
     const instance = that;
     try {
         if (instance.props.user) {
-            const avatarStackNode = instance._reactInternalFiber.stateNode._reactInternalFiber.child.child.child.child.stateNode;
+            const avatarStackNode = instance._reactInternals.stateNode._reactInternals.child.child.child.child.stateNode;
             let APFPDiv = document.createElement("div");
             APFPDiv.className = "APFP";
             APFPDiv.style = "position: absolute; top: inherit; left: inherit; width: 24px; height: 24px; border-radius: 50%; margin-left: 8px;";
@@ -336,7 +339,7 @@ const connectedCallAvatarPatch = () => BdApi.Patcher.after("ConnectedCallAvatarP
     const instance = that;
     try {
         if (value.props.children.length <= 3) {
-            const userID = instance._reactInternalFiber.key;
+            const userID = instance._reactInternals.key;
             const APFP = {
                 className: "APFP",
                 style: {
