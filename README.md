@@ -24,17 +24,22 @@ Another reason is that, for some places, we had to add an HTML Div to get the be
 4. Enable the plugin in the "Plugins" tab. Now you will be able to see people's Animated Profile Pictures, and they will see yours.
 5. Make a request for an Animated Profile picture by following the next section.
 
-## Requesting a picture: 
-To request an Animated Profile Picture join [this](https://discord.gg/xzwKqwvQcP) Discord server, and get into the **#apfp-requests** channel.
+## Requesting a picture:
+You will need the **direct** link of the images. This is, the static image link should end with *.jpg*, *.jpeg*, *.png* format, and the animated image link should end in *.gif*. To get this link, right click on the image and click on *Copy image link*. 
+The whitelisted domains accepted are [imgur](https://www.imgur.com) and Discord. You can upload your images to either of them. Once you have your picture links ready, you may choose one of two options to make your request:
+
+### 1: Using the bot in the server.
+To request an Animated Profile Picture following this method, join [this](https://discord.gg/xzwKqwvQcP) Discord server, and get into the **#apfp-requests** channel.
 Send a message following the following structure:
 ```
 $pfp <Link to static image> <Link to animated image>
 ```
 *(make sure to remove the **<>** before sending the mesage).*
-
 If the request goes through with the bot, you'll see it in the **#apfp-requests** channel. Then you only have to wait for your images to be reviewed to check they don't contain any NSFW/gore elements. The status of your request can be seen in [this](https://rmkx.github.io/APFP/web/) website.
+### 2: Requesting through the User Profile section in settings.
+Using this method, you'll only need to put the direct URLs of the images on the corresponding text boxes, then click confirm. A toast should pop-up with information about your request being valid or not. If your request is valid, you'll only have to wait for your images to be reviewed to check they don't contain any NSFW/gore elements. The status of your request can be seen in [this](https://rmkx.github.io/APFP/web/) website.
 
-For further questions, you can check the **#apfp** channel in the Discord server.
+### For further questions, you can check the **#apfp** channel in the Discord server.
 
 ## This plugin is fully functional but it's still in the beta stage.
 Please be patient and report bugs in the Issues tab, or in the **#bug-reports** channel in the Discord server. 
