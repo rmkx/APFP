@@ -290,34 +290,37 @@ const userProfilePatch = () => BdApi.Patcher.after("UserProfilePatch", UserProfi
 });
 const ChatMessages = BdApi.findModule(m => m.default && m.default.toString().search("childrenRepliedMessage") > -1);
 const chatAvatarPatch = () => BdApi.Patcher.after("ChatAvatarPatch", ChatMessages, "default", (that, args, value) => {
-    const [props] = args;
-    if (value.props.children.props.className.includes("groupStart") && !props.isSystemMessage) {
-        const originalRef = typeof value.props.children.ref === "function" ? value.props.children.ref : null;
-        value.props.children.ref = (e) => {
-            if (!e) return originalRef ? originalRef(e) : e;
-            if (!e.querySelector(".APFP")) {
-                if (props.hasReply && props.childrenHeader.props.repliedMessage.message) {
-                    const replyNode = e.querySelector(".repliedMessage-VokQwo");
-                    const replyUserID = props.childrenHeader.props.repliedMessage.message.author.id;
+    try {
+        const [props] = args;
+        if (value.props.children.props.className.includes("groupStart") && !props.isSystemMessage) {
+            const originalRef = typeof value.props.children.ref === "function" ? value.props.children.ref : null;
+            value.props.children.ref = (e) => {
+                if (!e) return originalRef ? originalRef(e) : e;
+                if (!e.querySelector(".APFP")) {
+                    if (props.hasReply && props.childrenHeader.props.repliedMessage.message) {
+                        const replyNode = e.querySelector(".repliedMessage-VokQwo");
+                        const replyUserID = props.childrenHeader.props.repliedMessage.message.author.id;
+                        let APFPDiv = document.createElement("div");
+                        APFPDiv.className = "APFP";
+                        APFPDiv.style = "position: absolute; left: 0px; width: 16px; height: 16px; border-radius: 50%; pointer-events: none; z-index: 1; user-select: none;";
+                        APFPDiv.setAttribute("apfp-user-id", replyUserID);
+                        replyNode.setAttribute("apfp-user-id", replyUserID);
+                        replyNode.append(APFPDiv);
+                    }
+                    const avatarParentNode = e.querySelector(".contents-2mQqc9");
+                    const userID = props.childrenHeader.props.message.author.id;
                     let APFPDiv = document.createElement("div");
                     APFPDiv.className = "APFP";
-                    APFPDiv.style = "position: absolute; left: 0px; width: 16px; height: 16px; border-radius: 50%; pointer-events: none; z-index: 1; user-select: none;";
-                    APFPDiv.setAttribute("apfp-user-id", replyUserID);
-                    replyNode.setAttribute("apfp-user-id", replyUserID);
-                    replyNode.append(APFPDiv);
+                    APFPDiv.style = "position: absolute; top: 0px; left: -56px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
+                    APFPDiv.setAttribute("apfp-user-id", userID);
+                    avatarParentNode.setAttribute("apfp-user-id", userID);
+                    avatarParentNode.childNodes[1].insertBefore(APFPDiv, avatarParentNode.childNodes[1].childNodes[0]);
                 }
-                const avatarParentNode = e.querySelector(".contents-2mQqc9");
-                const userID = props.childrenHeader.props.message.author.id;
-                let APFPDiv = document.createElement("div");
-                APFPDiv.className = "APFP";
-                APFPDiv.style = "position: absolute; top: 0px; left: -56px; margin-top: calc(4px - .125rem); width: 40px; height: 40px; border-radius: 50%; pointer-events: none; z-index: 1;";
-                APFPDiv.setAttribute("apfp-user-id", userID);
-                avatarParentNode.setAttribute("apfp-user-id", userID);
-                avatarParentNode.childNodes[1].insertBefore(APFPDiv, avatarParentNode.childNodes[1].childNodes[0]);
-            }
-            return originalRef ? originalRef(e) : e;
-        };
+                return originalRef ? originalRef(e) : e;
+            };
+        }
     }
+    catch (error) { console.log(error); return value; }
     return value;
 });
 const RTCUsers = BdApi.findModule((m) => m?.default?.displayName === 'RTCConnectionVoiceUsers');
@@ -341,7 +344,7 @@ const rtcUserPatch = () => BdApi.Patcher.after("RTCUsersPatch", RTCUsers, "defau
             return originalRef ? originalRef(e) : e;
         };
     }
-    catch (error) { console.log(error) }
+    catch (error) { console.log(error); return value; }
     return value;
 });
 const ConnectedCallAvatar = BdApi.findModuleByDisplayName("CallAvatar");
@@ -365,7 +368,7 @@ const connectedCallAvatarPatch = () => BdApi.Patcher.after("ConnectedCallAvatarP
             value.props.children.push(BdApi.React.createElement("div", APFP));
         }
     }
-    catch (error) { console.log(error) }
+    catch (error) { console.log(error); return value; }
     return value;
 });
 const SearchResultsPopout = BdApi.findModuleByDisplayName("SearchResultsPopout");
@@ -392,7 +395,7 @@ const searchResultsPopoutPatch = () => BdApi.Patcher.after("SearchResultsPopoutA
             return originalRef ? originalRef(e) : e;
         }
     }
-    catch (error) { console.log(error) }
+    catch (error) { console.log(error); return value; }
     return value;
 });
 const SearchResultMessages = BdApi.findModuleByDisplayName("SearchResult");
@@ -424,7 +427,7 @@ const resultMessagesPatch = () => BdApi.Patcher.after("ResultMessagesAvatarPatch
             }
         }
     }
-    catch (error) { console.log(error) }
+    catch (error) { console.log(error); return value; }
     return value;
 });
 const PinnedMessages = BdApi.findModule((m) => m?.default?.displayName === "ChannelPins");
@@ -450,21 +453,33 @@ const pinnedMessagesPatch = () => BdApi.Patcher.after("PinnedMessagesPatch", Pin
             return originalRef ? originalRef(e) : e;
         }
     }
-    catch (error) { console.log(error) }
+    catch (error) { console.log(error); return value; }
     return value;
 });
 const UserSettingsProfilePreview = BdApi.findModule((m) => m?.default?.displayName === "UserSettingsProfilePreview")
 const UserSettingsProfilePreviewPatch = () => BdApi.Patcher.after("UserSettingsProfilePreviewPatch", UserSettingsProfilePreview, "default", (that, args, value) => {
-    var user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id
-    value.props.children[3].props.children.splice(2, 0, BdApi.React.createElement("div", {
-        "apfp-user-id": user,
-        class: "APFP",
-        id: "APFP-Settings-Preview"
-    }))
+    try {
+        var user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id;
+        value.props.children[3].props.children.splice(2, 0, BdApi.React.createElement("div", {
+            "apfp-user-id": user,
+            class: "APFP",
+            id: "APFP-Settings-Preview"
+        }));
+    }
+    catch (error) { console.log(error); return value; }
     return value;
 });
-const AvatarSection = BdApi.findModule((m) => m?.default?.displayName === "AvatarSection")
-const button = BdApi.findModuleByProps("Button").Button
+const AvatarSection = BdApi.findModule((m) => m?.default?.displayName === "AvatarSection");
+const AvatarSectionPatch = () => BdApi.Patcher.after("AvatarSectionPatch", AvatarSection, "default", (that, args, value) => {
+    try {
+        value.props.children.props.children.splice(1, 0, BdApi.React.createElement(button, {
+            onClick: popup
+        }, "Change APFP"));
+    }
+    catch (error) { console.log(error); return value; }
+    return value;
+});
+const button = BdApi.findModuleByProps("Button").Button;
 const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
     const [value, setValue] = BdApi.React.useState(props[valueProp]);
     return BdApi.React.createElement(Component, {
@@ -483,25 +498,24 @@ function popupContent() {
     var sInput = BdApi.React.createElement(TextInput, {
         value: BdApi.getData("APFP", "sInput"),
         placeholder: "Static Image",
-        onChange: (value) => {BdApi.saveData('APFP', 'sInput', value);}
-      })
+        onChange: (value) => { BdApi.saveData('APFP', 'sInput', value); }
+    });
     var aInput = BdApi.React.createElement(TextInput, {
         value: BdApi.getData("APFP", "aInput"),
         placeholder: "Animated Image",
-        onChange: (value) => {BdApi.saveData('APFP', 'aInput', value);}
-    })
+        onChange: (value) => { BdApi.saveData('APFP', 'aInput', value); }
+    });
     var container = BdApi.React.createElement('div', null, sInput, aInput);
-    return container
+    return container;
 
 }
 async function post(user, aImage, sImage) {
-    let data = {'userId':user, 'staticImage':aImage, 'animatedImage':sImage}
-    console.log(data)
-    request.post('https://APFP-JS-API.p0rtl.repl.co/AddUserBTN', {form: data})
+    let data = { 'userId': user, 'staticImage': aImage, 'animatedImage': sImage }
+    request.post('https://APFP-JS-API.p0rtl.repl.co/AddUserBTN', { form: data });
 }
 function openOauth() {
     var urlRaw = 'https://discord.com/api/oauth2/authorize?client_id=857381927542718504^&redirect_uri=https%3A%2F%2Frmkx.github.io%2FAPFP%2Fweb%2F^&response_type=code^&scope=identify';
-    var start = (process.platform == 'darwin'? 'open': process.platform == 'win32'? 'start': 'xdg-open');
+    var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
     require('child_process').exec(start + ' ' + urlRaw);
 }
 function updateAPFP() {
@@ -510,35 +524,22 @@ function updateAPFP() {
     user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id
     if (sImage.startsWith("https://i.imgur.com") || sImage.startsWith("https://ptb.discord.com") || sImage.startsWith("https://cdn.discordapp.com")) {
         if (aImage.startsWith("https://i.imgur.com") || aImage.startsWith("https://ptb.discord.com") || aImage.startsWith("https://cdn.discordapp.com")) {
-            openOauth()
+            openOauth();
             setTimeout(post, 60000, user, aImage, sImage);
         } else {
-            BdApi.showToast("Invalid Animated Image Url")
+            BdApi.showToast("The Animated Image url is not whitelisted");
         }
     } else {
-        BdApi.showToast("Invalid Static Image Url")
+        BdApi.showToast("The Static Image url is not whitelisted");
     }
-    
+
 }
 function popup() {
     BdApi.showConfirmationModal("Change APFP", popupContent(), {
         confirmText: "Confirm",
         onConfirm: updateAPFP
-    })
-} 
-const AvatarSectionPatch = () => BdApi.Patcher.after("AvatarSectionPatch", AvatarSection, "default", (that, args, value) => {
-    const instance = that;
-    const [props] = args;
-    //console.log("Instance: ", instance, "\nProps: ", props, "\nValue: ", value);
-    try {
-        //console.log(value.props.children)
-        value.props.children.props.children.splice(1, 0, BdApi.React.createElement(button, {
-            onClick: popup
-        }, "Change APFP"))
-    }
-    catch (error) { console.log(error) }
-    return value;
-});
+    });
+}
 function buildMenu(menuTimes) {
     var menuOptions = []
     menuTimes.forEach(mTime => {
