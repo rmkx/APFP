@@ -5,7 +5,7 @@
 * @updateUrl    https://raw.githubusercontent.com/rmkx/APFP/main/APFP.plugin.js
 * @author       rmkx, p0rtL
 * @invite       HnGWVQbQBv
-* @version      1.0.3 Beta
+* @version      1.1 Beta
 */
 
 module.exports = class APFP {
@@ -30,6 +30,7 @@ module.exports = class APFP {
         searchResultsPopoutPatch();
         resultMessagesPatch();
         pinnedMessagesPatch();
+        AvatarSectionPatch();
         cssInterval();
         updateCss();
 
@@ -46,6 +47,7 @@ module.exports = class APFP {
     observer(changes) { }
 }
 var clearCssInt;
+const request = require('request');
 const getElementByComponentName = componentName => new Promise(resolve => {
     const getElement = () => {
         const element = document.querySelector(componentName);
@@ -450,7 +452,8 @@ const pinnedMessagesPatch = () => BdApi.Patcher.after("PinnedMessagesPatch", Pin
     catch (error) { console.log(error) }
     return value;
 });
-
+const AvatarSection = BdApi.findModule((m) => m?.default?.displayName === "AvatarSection")
+const button = BdApi.findModuleByProps("Button").Button
 const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
     const [value, setValue] = BdApi.React.useState(props[valueProp]);
     return BdApi.React.createElement(Component, {
@@ -462,10 +465,69 @@ const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onCha
         }
     });
 }
-
+const TextInput = createUpdateWrapper(BdApi.findModuleByDisplayName("TextInput"));
 const Dropdown = createUpdateWrapper(BdApi.findModuleByProps("SingleSelect").SingleSelect);
 const menuTimes = ["Don't Update", 30, 45, 60, 90, 120];
+function popupContent() {
+    var sInput = BdApi.React.createElement(TextInput, {
+        value: BdApi.getData("APFP", "sInput"),
+        placeholder: "Static Image",
+        onChange: (value) => {BdApi.saveData('APFP', 'sInput', value);}
+      })
+    var aInput = BdApi.React.createElement(TextInput, {
+        value: BdApi.getData("APFP", "aInput"),
+        placeholder: "Animated Image",
+        onChange: (value) => {BdApi.saveData('APFP', 'aInput', value);}
+    })
+    var container = BdApi.React.createElement('div', null, sInput, aInput);
+    return container
 
+}
+async function post(user, aImage, sImage) {
+    let data = {'userId':user, 'staticImage':aImage, 'animatedImage':sImage}
+    console.log(data)
+    request.post('https://APFP-JS-API.p0rtl.repl.co/AddUserBTN', {form: data})
+}
+function openOauth() {
+    var urlRaw = 'https://discord.com/api/oauth2/authorize?client_id=857381927542718504^&redirect_uri=https%3A%2F%2Frmkx.github.io%2FAPFP%2Fweb%2F^&response_type=code^&scope=identify';
+    var start = (process.platform == 'darwin'? 'open': process.platform == 'win32'? 'start': 'xdg-open');
+    require('child_process').exec(start + ' ' + urlRaw);
+}
+function updateAPFP() {
+    sImage = BdApi.getData("APFP", "sInput")
+    aImage = BdApi.getData("APFP", "aInput")
+    user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id
+    if (sImage.startsWith("https://i.imgur.com") || sImage.startsWith("https://ptb.discord.com") || sImage.startsWith("https://cdn.discordapp.com")) {
+        if (aImage.startsWith("https://i.imgur.com") || aImage.startsWith("https://ptb.discord.com") || aImage.startsWith("https://cdn.discordapp.com")) {
+            openOauth()
+            setTimeout(post, 60000, user, aImage, sImage);
+        } else {
+            BdApi.showToast("Invalid Animated Image Url")
+        }
+    } else {
+        BdApi.showToast("Invalid Static Image Url")
+    }
+    
+}
+function popup() {
+    BdApi.showConfirmationModal("Change APFP", popupContent(), {
+        confirmText: "Confirm",
+        onConfirm: updateAPFP
+    })
+} 
+const AvatarSectionPatch = () => BdApi.Patcher.after("AvatarSectionPatch", AvatarSection, "default", (that, args, value) => {
+    const instance = that;
+    const [props] = args;
+    console.log("Instance: ", instance, "\nProps: ", props, "\nValue: ", value);
+    try {
+        console.log(value.props.children)
+        value.props.children.props.children.splice(1, 0, BdApi.React.createElement(button, {
+            onClick: popup
+        }, "Change APFP"))
+    }
+    catch (error) { console.log(error) }
+    return value;
+});
 function buildMenu(menuTimes) {
     var menuOptions = []
     menuTimes.forEach(mTime => {
@@ -484,7 +546,6 @@ function buildMenu(menuTimes) {
     });
     return menuOptions;
 }
-
 function settingsPanel() {
     var dropdownMenu = BdApi.React.createElement(Dropdown, {
         value: BdApi.getData("APFP", "Timer"),
@@ -501,7 +562,6 @@ function settingsPanel() {
     var container = BdApi.React.createElement('div', null, title, br, dropdownMenu);
     return container;
 }
-
 function cssInterval() {
     interval = BdApi.getData("APFP", "Timer");
     if (typeof (interval) == "number") {
@@ -512,7 +572,6 @@ function cssInterval() {
         if (clearCssInt) { clearInterval(clearCssInt); }
     }
 }
-
 function updateCss() {
     console.log("Updating APFP CSS Database")
     if (document.querySelector("bd-styles #APFP")) {
@@ -543,4 +602,5 @@ function unpatchAll() {
     BdApi.Patcher.unpatchAll("SearchResultsPopoutAvatarPatch");
     BdApi.Patcher.unpatchAll("ResultMessagesAvatarPatch");
     BdApi.Patcher.unpatchAll("PinnedMessagesPatch");
+    BdApi.Patcher.unpatchAll("AvatarSectionPatch");
 }
