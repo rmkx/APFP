@@ -509,7 +509,7 @@ function popupContent() {
     return container;
 }
 async function post(user, aImage, sImage) {
-    let data = { 'userId': user, 'staticImage': aImage, 'animatedImage': sImage }
+    let data = { 'userId': user, 'staticImage': sImage, 'animatedImage': aImage }
     request.post('https://APFP-JS-API.p0rtl.repl.co/AddUserBTN', { form: data });
 }
 function openOauth() {
