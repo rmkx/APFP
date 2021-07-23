@@ -84,6 +84,7 @@
     pointer-events: none;
     border: 6px solid var(--background-floating);
     background-color: var(--background-floating);
+    background-image: var(--user-avatar-playing);
 }
 
 #APFP-Settings-Preview:after {
@@ -98,7 +99,7 @@
     pointer-events: none;
     border: 4px solid var(--background-floating);
     background-color: var(--background-floating);
-    background-image: var(--user-avatar-playing);
+    background-image: var(--user-avatar-static);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
