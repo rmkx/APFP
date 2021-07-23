@@ -72,3 +72,34 @@
 .inputWrapper-31_8H8 .inputDefault-_djjkz.input-cIJ7To {
     margin-bottom: 10px;
 }
+
+#APFP-Settings-Preview {
+    position: absolute;
+    left: 117px;
+    top: 15px;
+    margin-top: calc(4px - .125rem);
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    pointer-events: none;
+    border: 6px solid var(--background-floating);
+    background-color: var(--background-floating);
+}
+
+#APFP-Settings-Preview:after {
+    content: "";
+    position: absolute;
+    left: 50px;
+    top: 40px;
+    margin-top: calc(4px - .125rem);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    pointer-events: none;
+    border: 4px solid var(--background-floating);
+    background-color: var(--background-floating);
+    background-image: var(--user-avatar-playing);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
