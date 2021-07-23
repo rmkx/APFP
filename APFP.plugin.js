@@ -31,6 +31,7 @@ module.exports = class APFP {
         resultMessagesPatch();
         pinnedMessagesPatch();
         AvatarSectionPatch();
+        UserSettingsProfilePreviewPatch();
         cssInterval();
         updateCss();
 
@@ -452,6 +453,16 @@ const pinnedMessagesPatch = () => BdApi.Patcher.after("PinnedMessagesPatch", Pin
     catch (error) { console.log(error) }
     return value;
 });
+const UserSettingsProfilePreview = BdApi.findModule((m) => m?.default?.displayName === "UserSettingsProfilePreview")
+const UserSettingsProfilePreviewPatch = () => BdApi.Patcher.after("UserSettingsProfilePreviewPatch", UserSettingsProfilePreview, "default", (that, args, value) => {
+    var user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id
+    value.props.children[3].props.children.splice(2, 0, BdApi.React.createElement("div", {
+        "apfp-user-id": user,
+        class: "APFP",
+        id: "APFP-Settings-Preview"
+    }))
+    return value;
+});
 const AvatarSection = BdApi.findModule((m) => m?.default?.displayName === "AvatarSection")
 const button = BdApi.findModuleByProps("Button").Button
 const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
@@ -518,9 +529,9 @@ function popup() {
 const AvatarSectionPatch = () => BdApi.Patcher.after("AvatarSectionPatch", AvatarSection, "default", (that, args, value) => {
     const instance = that;
     const [props] = args;
-    console.log("Instance: ", instance, "\nProps: ", props, "\nValue: ", value);
+    //console.log("Instance: ", instance, "\nProps: ", props, "\nValue: ", value);
     try {
-        console.log(value.props.children)
+        //console.log(value.props.children)
         value.props.children.props.children.splice(1, 0, BdApi.React.createElement(button, {
             onClick: popup
         }, "Change APFP"))
@@ -603,4 +614,5 @@ function unpatchAll() {
     BdApi.Patcher.unpatchAll("ResultMessagesAvatarPatch");
     BdApi.Patcher.unpatchAll("PinnedMessagesPatch");
     BdApi.Patcher.unpatchAll("AvatarSectionPatch");
+    BdApi.Patcher.unpatchAll("UserSettingsProfilePreviewPatch");
 }
