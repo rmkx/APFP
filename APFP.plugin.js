@@ -507,7 +507,6 @@ function popupContent() {
     });
     var container = BdApi.React.createElement('div', null, sInput, aInput);
     return container;
-
 }
 async function post(user, aImage, sImage) {
     let data = { 'userId': user, 'staticImage': aImage, 'animatedImage': sImage }
@@ -517,22 +516,32 @@ function openOauth() {
     var urlRaw = 'https://discord.com/api/oauth2/authorize?client_id=857381927542718504^&redirect_uri=https%3A%2F%2Frmkx.github.io%2FAPFP%2Fweb%2F^&response_type=code^&scope=identify';
     var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
     require('child_process').exec(start + ' ' + urlRaw);
+    BdApi.showToast("Your APFP request was successful", { type: "success" });
 }
 function updateAPFP() {
-    sImage = BdApi.getData("APFP", "sInput")
-    aImage = BdApi.getData("APFP", "aInput")
-    user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id
+    let sImage = BdApi.getData("APFP", "sInput");
+    let aImage = BdApi.getData("APFP", "aInput");
+    user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id;
     if (sImage.startsWith("https://i.imgur.com") || sImage.startsWith("https://ptb.discord.com") || sImage.startsWith("https://cdn.discordapp.com")) {
-        if (aImage.startsWith("https://i.imgur.com") || aImage.startsWith("https://ptb.discord.com") || aImage.startsWith("https://cdn.discordapp.com")) {
-            openOauth();
-            setTimeout(post, 60000, user, aImage, sImage);
-        } else {
-            BdApi.showToast("The Animated Image url is not whitelisted");
+        if (sImage.endsWith(".jpg") || sImage.endsWith(".jpeg") || sImage.endsWith(".png")) {
+            if (aImage.startsWith("https://i.imgur.com") || aImage.startsWith("https://ptb.discord.com") || aImage.startsWith("https://cdn.discordapp.com")) {
+                if (aImage.endsWith(".gif")) {
+                    openOauth();
+                    setTimeout(post, 60000, user, aImage, sImage);
+                }
+                else {
+                    BdApi.showToast("The Animated Image isn't a direct link", { type: "error" });
+                }
+            } else {
+                BdApi.showToast("The Animated Image domain is not whitelisted", { type: "error" });
+            }
+        }
+        else {
+            BdApi.showToast("The Static Image isn't a direct link", { type: "error" });
         }
     } else {
-        BdApi.showToast("The Static Image url is not whitelisted");
+        BdApi.showToast("The Static Image domain is not whitelisted", { type: "error" });
     }
-
 }
 function popup() {
     BdApi.showConfirmationModal("Change APFP", popupContent(), {
