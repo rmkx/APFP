@@ -70,7 +70,7 @@ window.onload = () => {
 
     if (location.href.indexOf("code") > -1) {
         const req = new XMLHttpRequest()
-        req.open("POST", "https://APFP-API-V2.p0rtl.repl.co/Oauth2")
+        req.open("POST", "https://APFP-JS-API.p0rtl.repl.co/Oauth2")
         req.send(code)
         req.onload = () => {
             
