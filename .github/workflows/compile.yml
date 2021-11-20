@@ -12,7 +12,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
       - name: Install Dependencies
-        run: npm install @actions/core mongodb fs
+        run: npm install @actions/core mongodb fs clean-css
       - name: Build
         env:
           MONGODB_URI: ${{secrets.MONGODB_URI}}
