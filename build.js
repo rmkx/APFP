@@ -72,7 +72,7 @@ async function compile() {
 }
 
 try {
-    compile().then(css => writeFileSync("./dist/usrbg.css", css));
+    compile().then(css => writeFileSync("./dist/apfp.css", css));
 } catch (err) {
     core.setFailed(err.message);
 }
