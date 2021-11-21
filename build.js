@@ -30,7 +30,7 @@ async function compile() {
 
     const createRule = (uids, rules) =>
         `${uids
-            .map(uid => `.root-3QyAh1[apfp-user-id="${uid}"]`)
+            .map(uid => `[apfp-user-id="${uid}"]`)
             .join()}{${rules.join("")}}`;
 
     const backgrounds = new Map(
