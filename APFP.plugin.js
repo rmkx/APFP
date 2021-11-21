@@ -30,8 +30,8 @@ module.exports = class APFP {
         searchResultsPopoutPatch();
         resultMessagesPatch();
         pinnedMessagesPatch();
-        AvatarSectionPatch();
-        UserSettingsProfilePreviewPatch();
+        // AvatarSectionPatch();
+        // UserSettingsProfilePreviewPatch();
         cssInterval();
         updateCss();
 
@@ -160,7 +160,7 @@ const nowPlayingAvatarPatch = () => BdApi.Patcher.after("NowPlayingAvatarPatch",
     catch (error) { console.log(error); return value; }
     return value;
 });
-const NewDirectMessage = BdApi.findModuleByDisplayName("DirectMessage");
+const NewDirectMessage = BdApi.findModuleByProps("DirectMessage");
 const newDm = () => BdApi.Patcher.after("NewDirectMessagePatcher", NewDirectMessage.prototype, "render", (that, args, value) => {
     const instance = that;
     try {
@@ -456,30 +456,88 @@ const pinnedMessagesPatch = () => BdApi.Patcher.after("PinnedMessagesPatch", Pin
     catch (error) { console.log(error); return value; }
     return value;
 });
-const UserSettingsProfilePreview = BdApi.findModule((m) => m?.default?.displayName === "UserSettingsProfilePreview")
-const UserSettingsProfilePreviewPatch = () => BdApi.Patcher.after("UserSettingsProfilePreviewPatch", UserSettingsProfilePreview, "default", (that, args, value) => {
-    try {
-        var user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id;
-        value.props.children[3].props.children.splice(2, 0, BdApi.React.createElement("div", {
-            "apfp-user-id": user,
-            class: "APFP",
-            id: "APFP-Settings-Preview"
-        }));
-    }
-    catch (error) { console.log(error); return value; }
-    return value;
-});
-const AvatarSection = BdApi.findModule((m) => m?.default?.displayName === "AvatarSection");
-const AvatarSectionPatch = () => BdApi.Patcher.after("AvatarSectionPatch", AvatarSection, "default", (that, args, value) => {
-    try {
-        value.props.children.props.children.splice(1, 0, BdApi.React.createElement(button, {
-            onClick: popup
-        }, "Change APFP"));
-    }
-    catch (error) { console.log(error); return value; }
-    return value;
-});
-const button = BdApi.findModuleByProps("Button").Button;
+// const UserSettingsProfilePreview = BdApi.findModule((m) => m?.default?.displayName === "UserSettingsProfilePreview")
+// const UserSettingsProfilePreviewPatch = () => BdApi.Patcher.after("UserSettingsProfilePreviewPatch", UserSettingsProfilePreview, "default", (that, args, value) => {
+//     console.log(value)
+//     try {
+//         var user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id;
+//         value.props.children[3].props.children.splice(2, 0, BdApi.React.createElement("div", {
+//             "apfp-user-id": user,
+//             class: "APFP",
+//             id: "APFP-Settings-Preview"
+//         }));
+//     }
+//     catch (error) { console.log(error); return value; }
+//     return value;
+// });
+// const AvatarSection = BdApi.findModule((m) => m?.default?.displayName === "AvatarSection");
+// const AvatarSectionPatch = () => BdApi.Patcher.after("AvatarSectionPatch", AvatarSection, "default", (that, args, value) => {
+//     try {
+//         value.props.children.props.children.splice(1, 0, BdApi.React.createElement(button, {
+//             onClick: popup
+//         }, "Change APFP"));
+//     }
+//     catch (error) { console.log(error); return value; }
+//     return value;
+// });
+// const button = BdApi.findModuleByProps("Button").Button;
+// const TextInput = createUpdateWrapper(BdApi.findModuleByDisplayName("TextInput"));
+
+// function popupContent() {
+//     var sInput = BdApi.React.createElement(TextInput, {
+//         value: BdApi.getData("APFP", "sInput"),
+//         placeholder: "Static Image",
+//         onChange: (value) => { BdApi.saveData('APFP', 'sInput', value); }
+//     });
+//     var aInput = BdApi.React.createElement(TextInput, {
+//         value: BdApi.getData("APFP", "aInput"),
+//         placeholder: "Animated Image",
+//         onChange: (value) => { BdApi.saveData('APFP', 'aInput', value); }
+//     });
+//     var container = BdApi.React.createElement('div', null, sInput, aInput);
+//     return container;
+// }
+// async function post(user, aImage, sImage) {
+//     let data = { 'userId': user, 'staticImage': sImage, 'animatedImage': aImage }
+//     request.post('https://APFP-JS-API.p0rtl.repl.co/AddUserBTN', { form: data });
+// }
+// function openOauth() {
+//     var urlRaw = 'https://discord.com/api/oauth2/authorize?client_id=857381927542718504^&redirect_uri=https%3A%2F%2Frmkx.github.io%2FAPFP%2Fweb%2F^&response_type=code^&scope=identify';
+//     var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
+//     require('child_process').exec(start + ' ' + urlRaw);
+//     BdApi.showToast("Your APFP request was successful", { type: "success" });
+// }
+// function updateAPFP() {
+//     let sImage = BdApi.getData("APFP", "sInput");
+//     let aImage = BdApi.getData("APFP", "aInput");
+//     user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id;
+//     if (sImage.startsWith("https://i.imgur.com") || sImage.startsWith("https://ptb.discord.com") || sImage.startsWith("https://cdn.discordapp.com")) {
+//         if (sImage.endsWith(".jpg") || sImage.endsWith(".jpeg") || sImage.endsWith(".png")) {
+//             if (aImage.startsWith("https://i.imgur.com") || aImage.startsWith("https://ptb.discord.com") || aImage.startsWith("https://cdn.discordapp.com")) {
+//                 if (aImage.endsWith(".gif")) {
+//                     openOauth();
+//                     setTimeout(post, 60000, user, aImage, sImage);
+//                 }
+//                 else {
+//                     BdApi.showToast("The Animated Image isn't a direct link", { type: "error" });
+//                 }
+//             } else {
+//                 BdApi.showToast("The Animated Image domain is not whitelisted", { type: "error" });
+//             }
+//         }
+//         else {
+//             BdApi.showToast("The Static Image isn't a direct link", { type: "error" });
+//         }
+//     } else {
+//         BdApi.showToast("The Static Image domain is not whitelisted", { type: "error" });
+//     }
+// }
+// function popup() {
+//     BdApi.showConfirmationModal("Change APFP", popupContent(), {
+//         confirmText: "Confirm",
+//         onConfirm: updateAPFP
+//     });
+// }
 const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onChange") => props => {
     const [value, setValue] = BdApi.React.useState(props[valueProp]);
     return BdApi.React.createElement(Component, {
@@ -491,64 +549,8 @@ const createUpdateWrapper = (Component, valueProp = "value", changeProp = "onCha
         }
     });
 }
-const TextInput = createUpdateWrapper(BdApi.findModuleByDisplayName("TextInput"));
 const Dropdown = createUpdateWrapper(BdApi.findModuleByProps("SingleSelect").SingleSelect);
 const menuTimes = ["Don't Update", 30, 45, 60, 90, 120];
-function popupContent() {
-    var sInput = BdApi.React.createElement(TextInput, {
-        value: BdApi.getData("APFP", "sInput"),
-        placeholder: "Static Image",
-        onChange: (value) => { BdApi.saveData('APFP', 'sInput', value); }
-    });
-    var aInput = BdApi.React.createElement(TextInput, {
-        value: BdApi.getData("APFP", "aInput"),
-        placeholder: "Animated Image",
-        onChange: (value) => { BdApi.saveData('APFP', 'aInput', value); }
-    });
-    var container = BdApi.React.createElement('div', null, sInput, aInput);
-    return container;
-}
-async function post(user, aImage, sImage) {
-    let data = { 'userId': user, 'staticImage': sImage, 'animatedImage': aImage }
-    request.post('https://APFP-JS-API.p0rtl.repl.co/AddUserBTN', { form: data });
-}
-function openOauth() {
-    var urlRaw = 'https://discord.com/api/oauth2/authorize?client_id=857381927542718504^&redirect_uri=https%3A%2F%2Frmkx.github.io%2FAPFP%2Fweb%2F^&response_type=code^&scope=identify';
-    var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
-    require('child_process').exec(start + ' ' + urlRaw);
-    BdApi.showToast("Your APFP request was successful", { type: "success" });
-}
-function updateAPFP() {
-    let sImage = BdApi.getData("APFP", "sInput");
-    let aImage = BdApi.getData("APFP", "aInput");
-    user = BdApi.findModuleByProps("getCurrentUser").getCurrentUser().id;
-    if (sImage.startsWith("https://i.imgur.com") || sImage.startsWith("https://ptb.discord.com") || sImage.startsWith("https://cdn.discordapp.com")) {
-        if (sImage.endsWith(".jpg") || sImage.endsWith(".jpeg") || sImage.endsWith(".png")) {
-            if (aImage.startsWith("https://i.imgur.com") || aImage.startsWith("https://ptb.discord.com") || aImage.startsWith("https://cdn.discordapp.com")) {
-                if (aImage.endsWith(".gif")) {
-                    openOauth();
-                    setTimeout(post, 60000, user, aImage, sImage);
-                }
-                else {
-                    BdApi.showToast("The Animated Image isn't a direct link", { type: "error" });
-                }
-            } else {
-                BdApi.showToast("The Animated Image domain is not whitelisted", { type: "error" });
-            }
-        }
-        else {
-            BdApi.showToast("The Static Image isn't a direct link", { type: "error" });
-        }
-    } else {
-        BdApi.showToast("The Static Image domain is not whitelisted", { type: "error" });
-    }
-}
-function popup() {
-    BdApi.showConfirmationModal("Change APFP", popupContent(), {
-        confirmText: "Confirm",
-        onConfirm: updateAPFP
-    });
-}
 function buildMenu(menuTimes) {
     var menuOptions = []
     menuTimes.forEach(mTime => {
@@ -623,6 +625,6 @@ function unpatchAll() {
     BdApi.Patcher.unpatchAll("SearchResultsPopoutAvatarPatch");
     BdApi.Patcher.unpatchAll("ResultMessagesAvatarPatch");
     BdApi.Patcher.unpatchAll("PinnedMessagesPatch");
-    BdApi.Patcher.unpatchAll("AvatarSectionPatch");
-    BdApi.Patcher.unpatchAll("UserSettingsProfilePreviewPatch");
+    // BdApi.Patcher.unpatchAll("AvatarSectionPatch");
+    // BdApi.Patcher.unpatchAll("UserSettingsProfilePreviewPatch");
 }
