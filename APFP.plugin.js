@@ -5,7 +5,7 @@
 * @updateUrl    https://raw.githubusercontent.com/rmkx/APFP/main/APFP.plugin.js
 * @author       rmkx, p0rtL
 * @invite       HnGWVQbQBv
-* @version      1.1 Beta
+* @version      2.0 Beta
 */
 
 module.exports = class APFP {
